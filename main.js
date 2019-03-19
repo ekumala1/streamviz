@@ -12,6 +12,7 @@ window.onload = function() {
     console.log(data);
 
     viewTab('raw');
+    loadRaw();
   });
 };
 
@@ -27,4 +28,26 @@ function viewTab(tabName) {
   }
 
   currentTab = tabName;
+}
+
+function loadRaw() {
+  var table = document.getElementById('rawTable');
+
+  // add in headers
+  var tr = '<tr>';
+  for (var key in data[0]) {
+    tr += `<th>${key}</th>`;
+  }
+  tr += '</tr>';
+
+  // add in all rows
+  for (var i = 0; i < Object.keys(data).length; i++) {
+    tr += '<tr>';
+
+    for (var key in data[i]) tr += `<td>${data[i][key]}</td>`;
+
+    tr += '</tr>';
+  }
+
+  table.innerHTML = tr;
 }
