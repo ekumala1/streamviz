@@ -1,0 +1,66 @@
+<!-- README first
+  If you need to run the program, use the stuff in brackets (don't include brackets): [python -m http.server 8000]
+  (then open it in localhost:8000)
+
+  tab switching is a little wonky, will probably fix that later
+
+  Dependencies needed:
+  MySQL Workbench/Server (workbench comes with server)
+  this is not related to the prototype currently, it's just where the database is stored
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>StreamViz</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div class="tab-bar">
+      <button class="tab-button" onclick="viewTab('box')">Box Plot</button
+      ><button class="tab-button" onclick="viewTab('scatter')">
+        Scatter Plot</button
+      ><button class="tab-button" onclick="viewTab('time')">Time Series</button>
+    </div>
+
+    <div class="main">
+      <div id="box" class="tab-content">
+        <div class="sidebar">
+          choices
+        </div>
+        <div class="content">
+          <svg height="200px"></svg>
+        </div>
+      </div>
+
+      <div id="scatter" class="tab-content">
+        <div class="sidebar">
+          choices
+        </div>
+        <div class="content">
+          <svg height="200px"></svg>
+        </div>
+      </div>
+
+      <div id="time" class="tab-content">
+        <div class="sidebar">
+          choices
+        </div>
+        <div class="content">
+          <svg height="200px"></svg>
+        </div>
+      </div>
+
+      <div id="raw" class="tab-content">
+        *insert table here*
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-button right" onclick="viewTab('raw')">
+        View Data
+      </button>
+    </div>
+  </body>
+</html>
