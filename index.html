@@ -1,8 +1,7 @@
 <!-- README first
-  If you need to run the program, use the stuff in brackets (don't include brackets): [python -m http.server 8000]
+  If you need to run the program, use the stuff in brackets (don't include brackets): [php -S localhost:8000]
+  (before it was with Python's webserver, but now I have to use PHP's webserver to support PHP code)
   (then open it in localhost:8000)
-
-  tab switching is a little wonky, will probably fix that later
 
   Dependencies needed:
   MySQL Workbench/Server (workbench comes with server)
@@ -14,6 +13,9 @@
   <head>
     <title>StreamViz</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
     <script src="main.js"></script>
   </head>
   <body>

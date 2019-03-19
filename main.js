@@ -7,7 +7,12 @@ window.onload = function() {
   tabs = document.getElementsByClassName('tab-content');
   tabButtons = document.getElementsByClassName('tab-button');
 
-  viewTab('raw');
+  $.getJSON('database.php', function(results) {
+    data = results;
+    console.log(data);
+
+    viewTab('raw');
+  });
 };
 
 function viewTab(tabName) {
