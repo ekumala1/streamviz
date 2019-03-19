@@ -19,6 +19,7 @@
 
     <script src="main.js"></script>
     <script src="scatter.js"></script>
+    <script src="time.js"></script>
   </head>
   <body>
     <div class="tab-bar">
@@ -57,10 +58,14 @@
 
       <div id="time" class="tab-content">
         <div class="sidebar">
-          choices
+          <h2>choices</h2>
+          <p>
+            Variable:<br />
+            <select id="tvar" onchange="setParam(0, this.value)"></select>
+          </p>
         </div>
         <div class="content">
-          <svg height="200px"></svg>
+          <svg id="timesvg" width="1195.5px" height="100%"></svg>
         </div>
       </div>
 

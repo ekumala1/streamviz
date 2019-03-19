@@ -14,10 +14,12 @@ window.onload = function() {
 
   $.getJSON('database.php', function(results) {
     data = results;
+    // had to add this in to process dates from MySQL
+    data.forEach(d => (d.Date = new Date(d.Date)));
     console.log(data);
 
     // just for testing (switch this back to raw if not set)
-    viewTab('scatter');
+    viewTab('time');
   });
 };
 
@@ -36,6 +38,8 @@ function viewTab(tabName) {
     loadRaw();
   } else if (tabName == 'scatter') {
     loadScatter();
+  } else if (tabName == 'time') {
+    loadTime();
   }
 
   currentTab = tabName;
@@ -64,7 +68,6 @@ function loadRaw() {
 }
 
 function loadScatterOptions() {
-  // moved this up here (interesting detail is that it still worked even though it was defined in loadScatter?!)
   var svar1 = document.getElementById('svar1');
   var svar2 = document.getElementById('svar2');
 
@@ -84,10 +87,28 @@ function loadScatter() {
   scatter.buildAxes();
 }
 
+function loadTimeOptions() {
+  var tvar = document.getElementById('tvar');
+
+  tvar.innerHTML = '';
+  for (key in data[0])
+    tvar.innerHTML += `<option value="${key}">${key}</option>`;
+}
+
+function loadTime() {
+  loadTimeOptions();
+
+  time = new timePlot(data);
+  time.clear();
+  time.buildAxes();
+}
+
 function setParam(index, value) {
   params[index] = value;
 
-  if (params[0] != null && params[1] != null) {
+  if (currentTab == 'scatter' && params[0] != null && params[1] != null) {
     scatter.buildScatter(params);
+  } else if (currentTab == 'time') {
+    time.buildLinePlot(params);
   }
 }
