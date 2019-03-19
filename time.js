@@ -40,7 +40,7 @@ class timePlot {
       .call(d3.axisLeft().scale(this.yScale));
   }
 
-  updateAxes(params) {
+  updateAxes() {
     // this.xScale.domain(d3.extent(data, d => +d[params[0]]));
     // this.yScale.domain(d3.extent(data, d => +d[params[1]]));
 
@@ -102,7 +102,7 @@ class timePlot {
       .attr('cx', d => this.xScale(d.key))
       .attr('cy', d => this.yScale(d.value))
       .style('fill', 'orange')
-      .style('opacity', 0.5);
+      .style('opacity', 1);
 
     enter
       .transition()
@@ -134,13 +134,13 @@ class timePlot {
     path
       .transition()
       .duration(this.duration)
-      .style('stroke-opacity', 1);
+      .style('stroke-opacity', 0.5);
   }
 
   buildLinePlot(params) {
     this.filterData(params);
-    this.updateAxes(params);
-    this.buildLine(params);
-    this.buildScatter(params);
+    this.updateAxes();
+    this.buildLine();
+    this.buildScatter();
   }
 }
