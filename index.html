@@ -39,7 +39,15 @@
 
       <div id="scatter" class="tab-content">
         <div class="sidebar">
-          choices
+          <h2>choices</h2>
+          <p>
+            Variable 1:<br />
+            <select id="svar1" onchange="setParam(0, this.value)"></select>
+          </p>
+          <p>
+            Variable 2:<br />
+            <select id="svar2" onchange="setParam(1, this.value)"></select>
+          </p>
         </div>
         <div class="content">
           <svg id="scattersvg" width="1195.5px" height="100%"></svg>

@@ -6,6 +6,8 @@ var currentTab;
 var width;
 var height;
 
+var params = [];
+
 window.onload = function() {
   tabs = document.getElementsByClassName('tab-content');
   tabButtons = document.getElementsByClassName('tab-button');
@@ -34,6 +36,7 @@ function viewTab(tabName) {
     loadRaw();
   } else if (tabName == 'scatter') {
     loadScatter();
+    loadScatterOptions();
   }
 
   currentTab = tabName;
@@ -61,19 +64,33 @@ function loadRaw() {
   table.innerHTML = tr;
 }
 
+function loadScatterOptions() {
+  svar1.innerHTML = '';
+  svar2.innerHTML = '';
+  for (key in data[0]) {
+    svar1.innerHTML += `<option value="${key}">${key}</option>`;
+    svar2.innerHTML += `<option value="${key}">${key}</option>`;
+  }
+}
+
 function loadScatter() {
+  var svar1 = document.getElementById('svar1');
+  var svar2 = document.getElementById('svar2');
+
   var svg = d3.select('#scattersvg');
-  width = document.getElementById('scattersvg').getBoundingClientRect().width;
-  height = document.getElementById('scattersvg').getBoundingClientRect().height;
+  var svgElement = document.getElementById('scattersvg');
+  width = svgElement.getBoundingClientRect().width;
+  height = svgElement.getBoundingClientRect().height;
+  svgElement.innerHTML = '';
 
   var xScale = d3
     .scaleLinear()
-    .domain(d3.extent(data, d => +d.Conductivity))
+    .domain(d3.extent(data, d => +d[params[0]]))
     .range([50, this.width - 100]);
 
   var yScale = d3
     .scaleLinear()
-    .domain(d3.extent(data, d => +d.Turbidity))
+    .domain(d3.extent(data, d => +d[params[1]]))
     .range([this.height - 50, 50]);
 
   var x = d3.axisBottom().scale(xScale);
@@ -95,8 +112,16 @@ function loadScatter() {
     .append('circle')
     .attr('class', 'bubble')
     .attr('r', 3)
-    .attr('cx', d => xScale(+d.Conductivity))
-    .attr('cy', d => yScale(+d.Turbidity))
+    .attr('cx', d => xScale(+d[params[0]]))
+    .attr('cy', d => yScale(+d[params[1]]))
     .style('fill', 'orange')
     .style('opacity', 0.5);
+}
+
+function setParam(index, value) {
+  params[index] = value;
+
+  if (params[0] != null && params[1] != null) {
+    loadScatter();
+  }
 }
