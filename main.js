@@ -36,7 +36,6 @@ function viewTab(tabName) {
     loadRaw();
   } else if (tabName == 'scatter') {
     loadScatter();
-    loadScatterOptions();
   }
 
   currentTab = tabName;
@@ -65,6 +64,10 @@ function loadRaw() {
 }
 
 function loadScatterOptions() {
+  // moved this up here (interesting detail is that it still worked even though it was defined in loadScatter?!)
+  var svar1 = document.getElementById('svar1');
+  var svar2 = document.getElementById('svar2');
+
   svar1.innerHTML = '';
   svar2.innerHTML = '';
   for (key in data[0]) {
@@ -74,54 +77,17 @@ function loadScatterOptions() {
 }
 
 function loadScatter() {
-  var svar1 = document.getElementById('svar1');
-  var svar2 = document.getElementById('svar2');
+  loadScatterOptions();
 
-  var svg = d3.select('#scattersvg');
-  var svgElement = document.getElementById('scattersvg');
-  width = svgElement.getBoundingClientRect().width;
-  height = svgElement.getBoundingClientRect().height;
-  svgElement.innerHTML = '';
-
-  var xScale = d3
-    .scaleLinear()
-    .domain(d3.extent(data, d => +d[params[0]]))
-    .range([50, this.width - 100]);
-
-  var yScale = d3
-    .scaleLinear()
-    .domain(d3.extent(data, d => +d[params[1]]))
-    .range([this.height - 50, 50]);
-
-  var x = d3.axisBottom().scale(xScale);
-  var y = d3.axisLeft().scale(yScale);
-
-  svg
-    .append('g')
-    .attr('transform', `translate(0, ${this.height - 50})`)
-    .call(x);
-  svg
-    .append('g')
-    .attr('transform', 'translate(50, 0)')
-    .call(y);
-
-  var selection = svg.selectAll('.bubble').data(data, d => d);
-
-  selection
-    .enter()
-    .append('circle')
-    .attr('class', 'bubble')
-    .attr('r', 3)
-    .attr('cx', d => xScale(+d[params[0]]))
-    .attr('cy', d => yScale(+d[params[1]]))
-    .style('fill', 'orange')
-    .style('opacity', 0.5);
+  scatter = new scatterPlot(data);
+  scatter.clear();
+  scatter.buildAxes();
 }
 
 function setParam(index, value) {
   params[index] = value;
 
   if (params[0] != null && params[1] != null) {
-    loadScatter();
+    scatter.buildScatter(params);
   }
 }
