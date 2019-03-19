@@ -36,8 +36,29 @@ class scatterPlot {
   }
 
   updateAxes(params) {
-    this.xScale.domain(d3.extent(data, d => +d[params[0]]));
-    this.yScale.domain(d3.extent(data, d => +d[params[1]]));
+    // added some filtering code
+    var data = this.data.filter(
+      d => d[params[0]] != null && d[params[1]] != null
+    );
+
+    // this.xScale.domain(d3.extent(data, d => +d[params[0]]));
+    // this.yScale.domain(d3.extent(data, d => +d[params[1]]));
+
+    // courtesy of https://stackoverflow.com/questions/34888205/insert-padding-so-that-points-do-not-overlap-with-y-or-x-axis
+    var xExtent = d3.extent(data, d => +d[params[0]]),
+      xRange = xExtent[1] - xExtent[0],
+      yExtent = d3.extent(data, d => +d[params[1]]),
+      yRange = yExtent[1] - yExtent[0];
+
+    // set domain to be extent +- 5%
+    this.xScale.domain([
+      xExtent[0] - xRange * 0.02,
+      xExtent[1] + xRange * 0.02
+    ]);
+    this.yScale.domain([
+      yExtent[0] - yRange * 0.02,
+      yExtent[1] + yRange * 0.02
+    ]);
 
     this.xSelect
       .transition()
@@ -52,7 +73,11 @@ class scatterPlot {
   buildScatter(params) {
     this.updateAxes(params);
 
-    var selection = this.svg.selectAll('.bubble').data(this.data, d => d);
+    // filtering code here too
+    var data = this.data.filter(
+      d => d[params[0]] != null && d[params[1]] != null
+    );
+    var selection = this.svg.selectAll('.bubble').data(data, d => d);
 
     selection
       .exit()
