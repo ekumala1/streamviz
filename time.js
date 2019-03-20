@@ -66,12 +66,13 @@ class timePlot {
     // get average entry by date
     this.fData = d3
       .nest()
-      .key(d => d.Date.toString())
+      .key(d => d.Date)
       .rollup(d => {
         var values = d.map(e => +e[params[0]]);
         return average(values);
       })
       .entries(this.fData);
+    // date is now in the format of a String because rollup converts Objects toString()
 
     // convert date back to Date object
     this.fData = this.fData.map(d => {

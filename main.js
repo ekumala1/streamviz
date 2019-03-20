@@ -19,7 +19,7 @@ window.onload = function() {
     console.log(data);
 
     // just for testing (switch this back to raw if not set)
-    viewTab('time');
+    viewTab('box');
   });
 };
 
@@ -40,6 +40,8 @@ function viewTab(tabName) {
     loadScatter();
   } else if (tabName == 'time') {
     loadTime();
+  } else if (tabName == 'box') {
+    loadBox();
   }
 
   currentTab = tabName;
@@ -103,6 +105,22 @@ function loadTime() {
   time.buildAxes();
 }
 
+function loadBoxOptions() {
+  var bvar = document.getElementById('bvar');
+
+  bvar.innerHTML = '';
+  for (key in data[0])
+    bvar.innerHTML += `<option value="${key}">${key}</option>`;
+}
+
+function loadBox() {
+  loadBoxOptions();
+
+  box = new boxPlot(data);
+  box.clear();
+  box.buildAxes();
+}
+
 function setParam(index, value) {
   params[index] = value;
 
@@ -110,5 +128,9 @@ function setParam(index, value) {
     scatter.buildScatter(params);
   } else if (currentTab == 'time') {
     time.buildLinePlot(params);
+  } else if (currentTab == 'box') {
+    // remove outer wrapper array
+    params = params[index];
+    box.buildBox(params);
   }
 }

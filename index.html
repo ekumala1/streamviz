@@ -25,6 +25,8 @@
     <script src="main.js"></script>
     <script src="scatter.js"></script>
     <script src="time.js"></script>
+    <script src="box.js"></script>
+    <script src="boxplot.js"></script>
   </head>
   <body>
     <div class="tab-bar">
@@ -37,10 +39,21 @@
     <div class="main">
       <div id="box" class="tab-content">
         <div class="sidebar">
-          choices
+          <h2>choices</h2>
+          <p>
+            Variable:<br />
+            <!-- first get selected options from select, but it's in the form of an HTMLCollection, so 
+              convert it to an array. then map each element from an HTMLOption to its label.-->
+            <select
+              multiple
+              id="bvar"
+              onchange="setParam(0, Array.from(this.selectedOptions).map(d => d.label))"
+              size="12"
+            ></select>
+          </p>
         </div>
         <div class="content">
-          <svg height="200px"></svg>
+          <svg id="boxsvg" width="1195.5px" height="100%"></svg>
         </div>
       </div>
 
