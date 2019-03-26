@@ -51,8 +51,14 @@ class boxPlot {
       temp = temp.concat(this.fData.map(d => +d[params[i]]));
     }
 
+    var yExtent = d3.extent(temp),
+      yRange = yExtent[1] - yExtent[0];
+
     this.xScale.domain(params);
-    this.yScale.domain(d3.extent(temp));
+    this.yScale.domain([
+      yExtent[0] - yRange * 0.02,
+      yExtent[1] + yRange * 0.02
+    ]);
 
     this.xSelect
       .transition()
@@ -94,6 +100,7 @@ class boxPlot {
 
     var offset = (boxWidth - whiskerWidth) / 2;
 
+    // bottom whisker
     group
       .append('line')
       .attr('class', 'line')
@@ -102,6 +109,7 @@ class boxPlot {
       .attr('x2', whiskerWidth + offset)
       .attr('y2', this.yScale(quantiles[0]));
 
+    // line between bottom and top whisker
     group
       .append('line')
       .attr('class', 'line')
@@ -110,6 +118,24 @@ class boxPlot {
       .attr('x2', boxWidth / 2)
       .attr('y2', this.yScale(quantiles[4]));
 
+    // box
+    group
+      .append('rect')
+      .attr('class', 'box')
+      .attr('width', boxWidth)
+      .attr('y', this.yScale(quantiles[3]))
+      .attr('height', this.yScale(quantiles[1]) - this.yScale(quantiles[3]));
+
+    // median
+    group
+      .append('line')
+      .attr('class', 'line')
+      .attr('x1', 0)
+      .attr('y1', this.yScale(quantiles[2]))
+      .attr('x2', boxWidth)
+      .attr('y2', this.yScale(quantiles[2]));
+
+    // top whisker
     group
       .append('line')
       .attr('class', 'line')
