@@ -73,7 +73,12 @@ class boxPlot {
   buildBox(params) {
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
     this.updateAxes(params);
-    this.svg.selectAll('.boxplot').remove();
+    this.svg
+      .selectAll('.boxplot')
+      .transition()
+      .duration(this.duration)
+      .style('stroke-opacity', 0)
+      .remove();
 
     for (var i in params) {
       var g = this.svg
@@ -84,8 +89,14 @@ class boxPlot {
           `translate(${this.xScale(params[i]) +
             this.xScale.bandwidth() / 2 -
             boxWidth / 2}, 0)`
-        );
+        )
+        .style('stroke-opacity', 0);
+
       this.drawWhiskers(g, params[i]);
+
+      g.transition()
+        .duration(this.duration)
+        .style('stroke-opacity', 1);
     }
   }
 
@@ -96,7 +107,6 @@ class boxPlot {
 
     var quantiles = [0, 0.25, 0.5, 0.75, 1];
     quantiles = quantiles.map(d => d3.quantile(array, d));
-    console.log(quantiles);
 
     var offset = (boxWidth - whiskerWidth) / 2;
 
