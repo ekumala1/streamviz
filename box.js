@@ -1,3 +1,6 @@
+var whiskerWidth = 10;
+var boxWidth = 20;
+
 class boxPlot {
   constructor(data) {
     this.svg = d3.select('#boxsvg');
@@ -38,15 +41,18 @@ class boxPlot {
   updateAxes(params) {
     // added some filtering code
     this.fData = this.data.filter(d => {
-      for (var param in params) if (d[param] == null) return false;
+      for (var i in params) if (d[params[i]] == null) return false;
 
       return true;
     });
 
-    this.xScale.domain(params);
-    // this.yScale.domain(d3.extent(data, d => +d[params[1]]));
+    var temp = [];
+    for (var i in params) {
+      temp = temp.concat(this.fData.map(d => +d[params[i]]));
+    }
 
-    this.yScale.domain([0, 100]);
+    this.xScale.domain(params);
+    this.yScale.domain(d3.extent(temp));
 
     this.xSelect
       .transition()
@@ -61,19 +67,55 @@ class boxPlot {
   buildBox(params) {
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
     this.updateAxes(params);
+    this.svg.selectAll('.boxplot').remove();
 
-    var g = d3.selectAll('.box').append('g');
-    this.drawWhiskers(g);
+    for (var i in params) {
+      var g = this.svg
+        .append('g')
+        .attr('class', 'boxplot')
+        .attr(
+          'transform',
+          `translate(${this.xScale(params[i]) +
+            this.xScale.bandwidth() / 2 -
+            boxWidth / 2}, 0)`
+        );
+      this.drawWhiskers(g, params[i]);
+    }
   }
 
   // start of box plotting functions
-  drawWhiskers(group) {
+  drawWhiskers(group, param) {
+    var array = this.fData.map(d => +d[param]);
+    array = array.sort((a, b) => a - b);
+
+    var quantiles = [0, 0.25, 0.5, 0.75, 1];
+    quantiles = quantiles.map(d => d3.quantile(array, d));
+    console.log(quantiles);
+
+    var offset = (boxWidth - whiskerWidth) / 2;
+
     group
       .append('line')
-      .attr('class', 'whisker')
-      .attr('x1', 0)
-      .attr('y1', x0)
-      .attr('x2', 0 + width)
-      .attr('y2', x0);
+      .attr('class', 'line')
+      .attr('x1', offset)
+      .attr('y1', this.yScale(quantiles[0]))
+      .attr('x2', whiskerWidth + offset)
+      .attr('y2', this.yScale(quantiles[0]));
+
+    group
+      .append('line')
+      .attr('class', 'line')
+      .attr('x1', boxWidth / 2)
+      .attr('y1', this.yScale(quantiles[0]))
+      .attr('x2', boxWidth / 2)
+      .attr('y2', this.yScale(quantiles[4]));
+
+    group
+      .append('line')
+      .attr('class', 'line')
+      .attr('x1', offset)
+      .attr('y1', this.yScale(quantiles[4]))
+      .attr('x2', whiskerWidth + offset)
+      .attr('y2', this.yScale(quantiles[4]));
   }
 }

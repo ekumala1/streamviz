@@ -116,8 +116,7 @@ class timePlot {
     var line = d3
       .line()
       .x(d => this.xScale(d.key))
-      .y(d => this.yScale(d.value))
-      .curve(d3.curveMonotoneX);
+      .y(d => this.yScale(d.value));
 
     d3.selectAll('.line')
       .transition()
