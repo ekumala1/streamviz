@@ -89,7 +89,6 @@ class scatterPlot {
       .attr('r', 0)
       .attr('cx', d => this.xScale(+d[params[0]]))
       .attr('cy', d => this.yScale(+d[params[1]]))
-      .style('fill', 'orange')
       .style('opacity', 0.5);
 
     enter

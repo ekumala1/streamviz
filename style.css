@@ -90,6 +90,10 @@ li {
   color: #666;
 }
 
+.bubble {
+  fill: orange;
+}
+
 .line {
   fill: none;
   stroke: orange;

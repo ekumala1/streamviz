@@ -48,15 +48,13 @@ class boxPlot {
 
     var temp = [];
     for (var i in params) {
-      console.log(temp);
       temp = temp.concat(this.fData.map(d => +d[params[i]]));
+      // console.log(temp);
     }
 
     var yExtent = d3.extent(temp),
       yRange = yExtent[1] - yExtent[0];
 
-    console.log(temp);
-    console.log(yExtent);
     this.xScale.domain(params);
     this.yScale.domain([
       yExtent[0] - yRange * 0.02,
@@ -80,13 +78,17 @@ class boxPlot {
       .selectAll('.boxplot')
       .transition()
       .duration(this.duration)
+      .style('fill-opacity', 0)
       .style('stroke-opacity', 0)
       .remove();
 
+    // make proportional whisker/box widths
     whiskerWidth = this.xScale.bandwidth() * 0.3;
     boxWidth = this.xScale.bandwidth() * 0.4;
 
+    // for every selected column
     for (var i in params) {
+      // create a group for easy manipulation
       var g = this.svg
         .append('g')
         .attr('class', 'boxplot')
@@ -98,7 +100,25 @@ class boxPlot {
         )
         .style('stroke-opacity', 0);
 
-      this.drawWhiskers(g, params[i]);
+      // 1d dataset of current column
+      var array = this.fData.map(d => +d[params[i]]);
+      array = array.sort((a, b) => a - b);
+
+      // find quantiles
+      var q = [0, 0.25, 0.5, 0.75, 1];
+      q = q.map(d => d3.quantile(array, d));
+
+      // find outliers
+      var iqr = q[3] - q[1];
+      var outliers = array.filter(
+        d => d < q[1] - 1.5 * iqr || d > q[3] + 1.5 * iqr
+      );
+      // remove outliers
+      array = array.filter(d => !outliers.includes(d));
+
+      this.drawWhiskers(g, Math.min(...array), Math.max(...array));
+      this.drawBox(g, q);
+      this.drawOutliers(g, outliers);
 
       g.transition()
         .duration(this.duration)
@@ -107,13 +127,7 @@ class boxPlot {
   }
 
   // start of box plotting functions
-  drawWhiskers(group, param) {
-    var array = this.fData.map(d => +d[param]);
-    array = array.sort((a, b) => a - b);
-
-    var quantiles = [0, 0.25, 0.5, 0.75, 1];
-    quantiles = quantiles.map(d => d3.quantile(array, d));
-
+  drawWhiskers(group, min, max) {
     var offset = (boxWidth - whiskerWidth) / 2;
 
     // bottom whisker
@@ -121,19 +135,30 @@ class boxPlot {
       .append('line')
       .attr('class', 'line')
       .attr('x1', offset)
-      .attr('y1', this.yScale(quantiles[0]))
+      .attr('y1', this.yScale(min))
       .attr('x2', whiskerWidth + offset)
-      .attr('y2', this.yScale(quantiles[0]));
+      .attr('y2', this.yScale(min));
 
-    // line between bottom and top whisker
+    // line between whiskers
     group
       .append('line')
       .attr('class', 'line')
       .attr('x1', boxWidth / 2)
-      .attr('y1', this.yScale(quantiles[0]))
+      .attr('y1', this.yScale(min))
       .attr('x2', boxWidth / 2)
-      .attr('y2', this.yScale(quantiles[4]));
+      .attr('y2', this.yScale(max));
 
+    // top whisker
+    group
+      .append('line')
+      .attr('class', 'line')
+      .attr('x1', offset)
+      .attr('y1', this.yScale(max))
+      .attr('x2', whiskerWidth + offset)
+      .attr('y2', this.yScale(max));
+  }
+
+  drawBox(group, quantiles) {
     // box
     group
       .append('rect')
@@ -150,14 +175,26 @@ class boxPlot {
       .attr('y1', this.yScale(quantiles[2]))
       .attr('x2', boxWidth)
       .attr('y2', this.yScale(quantiles[2]));
-
-    // top whisker
-    group
-      .append('line')
-      .attr('class', 'line')
-      .attr('x1', offset)
-      .attr('y1', this.yScale(quantiles[4]))
-      .attr('x2', whiskerWidth + offset)
-      .attr('y2', this.yScale(quantiles[4]));
   }
+
+  drawOutliers(group, outliers) {
+    console.log('drawing ' + outliers.length + ' outliers');
+    var selection = group.selectAll('.bubble').data(outliers);
+    var offset = boxWidth / 2;
+
+    var enter = selection
+      .enter()
+      .append('circle')
+      .attr('class', 'bubble')
+      .attr('r', 0)
+      .attr('cx', offset)
+      .attr('cy', d => this.yScale(d))
+      .style('opacity', 0.5);
+
+    enter
+      .transition()
+      .duration(this.duration)
+      .attr('r', 3);
+  }
+  // end of box plotting functions
 }

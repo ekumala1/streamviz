@@ -102,7 +102,6 @@ class timePlot {
       .attr('r', 0)
       .attr('cx', d => this.xScale(d.key))
       .attr('cy', d => this.yScale(d.value))
-      .style('fill', 'orange')
       .style('opacity', 1);
 
     enter
