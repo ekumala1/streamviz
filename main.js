@@ -19,7 +19,7 @@ window.onload = function() {
     console.log(data);
 
     // just for testing (switch this back to raw if not set)
-    viewTab('box');
+    viewTab('raw');
   });
 };
 

@@ -38,6 +38,9 @@ body {
   transition: 0.3s;
   font: 16px 'Trebuchet MS', 'Helvetica', sans-serif;
 }
+.tab-button.top {
+  width: calc(100% / 3);
+}
 .tab-button:hover {
   background-color: #ddd;
 }
