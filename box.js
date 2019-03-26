@@ -1,5 +1,5 @@
-var whiskerWidth = 10;
-var boxWidth = 20;
+var whiskerWidth = 40;
+var boxWidth = 50;
 
 class boxPlot {
   constructor(data) {
@@ -48,12 +48,15 @@ class boxPlot {
 
     var temp = [];
     for (var i in params) {
+      console.log(temp);
       temp = temp.concat(this.fData.map(d => +d[params[i]]));
     }
 
     var yExtent = d3.extent(temp),
       yRange = yExtent[1] - yExtent[0];
 
+    console.log(temp);
+    console.log(yExtent);
     this.xScale.domain(params);
     this.yScale.domain([
       yExtent[0] - yRange * 0.02,
@@ -79,6 +82,9 @@ class boxPlot {
       .duration(this.duration)
       .style('stroke-opacity', 0)
       .remove();
+
+    whiskerWidth = this.xScale.bandwidth() * 0.3;
+    boxWidth = this.xScale.bandwidth() * 0.4;
 
     for (var i in params) {
       var g = this.svg
