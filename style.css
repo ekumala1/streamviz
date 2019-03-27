@@ -14,6 +14,7 @@
 body {
   margin: 0;
   padding: 0;
+  font: 16px 'Trebuchet MS', 'Helvetica', sans-serif;
 }
 .tab-content {
   height: calc(100vh - 100px);
@@ -27,18 +28,14 @@ body {
   background-color: #f1f1f1;
   width: 100%;
 }
-.tab-bar:after {
-  content: ' ';
-  display: block;
-  clear: both;
-}
 .tab-button {
   background-color: inherit;
   border: none;
   outline: none;
   padding: 14px 16px;
   transition: 0.3s;
-  font: 16px 'Trebuchet MS', 'Helvetica', sans-serif;
+  color: black;
+  margin: 0;
 }
 .tab-button.top {
   width: calc(100% / 3);
@@ -64,11 +61,6 @@ body {
   flex: 1;
 }
 
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  padding: 2px 16px;
-}
-
 .bubble {
   fill: orange;
 }
@@ -83,4 +75,41 @@ body {
   fill: white;
   stroke: orange;
   stroke-width: 2px;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 2px 16px;
+  margin: auto;
+  text-align: center;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='number'],
+input[type='password'],
+input[type='date'] {
+  border: none;
+  background: #fff;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 1px;
+  box-shadow: 1px 1px 3px 1px #ccc;
+  border: 1px solid #eee;
+
+  margin: 5px 0;
+}
+
+button {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition: 0.3s;
+}
+button:hover {
+  background-color: #29972d;
 }

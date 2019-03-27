@@ -19,7 +19,7 @@ window.onload = function() {
     console.log(data);
 
     // just for testing (switch this back to raw if not set)
-    viewTab('raw');
+    viewTab('login');
   });
 };
 
@@ -133,4 +133,12 @@ function setParam(index, value) {
     params = params[index];
     box.buildBox(params);
   }
+}
+
+function login() {
+  username = document.getElementById('l_username');
+  password = document.getElementById('l_password');
+
+  console.log(username.value);
+  console.log(password.value);
 }
