@@ -11,14 +11,16 @@
   box-sizing: border-box;
 }
 
-html {
-  height: 100%;
-}
 body {
   margin: 0;
-  height: 100%;
   padding: 0;
-  font-family: 'Trebuchet MS', 'Helvetica', sans-serif;
+}
+.tab-content {
+  height: calc(100vh - 100px);
+  padding: 10px;
+  overflow-y: scroll;
+  display: flex;
+  align-items: flex-start;
 }
 
 .tab-bar {
@@ -49,15 +51,6 @@ body {
   background-color: #ccc;
 }
 
-.main {
-  height: calc(100% - 100px);
-  overflow-y: scroll;
-}
-.tab-content {
-  display: flex;
-  height: 100%;
-  padding: 10px;
-}
 .sidebar {
   height: 100%;
   flex: 0 0 20%;
@@ -71,26 +64,9 @@ body {
   flex: 1;
 }
 
-ul,
-li {
-  list-style: none;
-}
-#wrapper {
-  width: 900px;
-  margin: 20px auto;
-}
-.data-container {
-  margin-top: 20px;
-}
-.data-container ul {
-  padding: 0;
-  margin: 0;
-}
-.data-container li {
-  margin-bottom: 5px;
-  padding: 5px 10px;
-  background: #eee;
-  color: #666;
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 2px 16px;
 }
 
 .bubble {
