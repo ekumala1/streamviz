@@ -22,8 +22,22 @@ window.onload = function() {
     console.log(data);
 
     // just for testing (switch this back to raw if not set)
-    viewTab('login');
+    viewTab('raw');
   });
+
+  $.post(
+    'checkLogin.php',
+    data => {
+      console.log(data);
+      if (data.result == 'success') {
+        loggedIn = true;
+        username = data.name;
+      }
+
+      refreshStatus();
+    },
+    'json'
+  );
 };
 
 function viewTab(tabName) {
@@ -52,6 +66,8 @@ function viewTab(tabName) {
 
 function loadRaw() {
   var table = document.getElementById('rawTable');
+
+  console.log(data);
 
   // add in headers
   var tr = '<tr>';
@@ -140,12 +156,9 @@ function setParam(index, value) {
 
 function refreshStatus() {
   var loginBtn = document.getElementById('loginBtn');
-  console.log(loggedIn);
   if (loggedIn) {
     loginBtn.disabled = true;
     loginBtn.innerHTML = `Welcome, ${username}`;
-
-    viewTab('raw');
   } else {
     loginBtn.disabled = false;
     loginBtn.innerHTML = 'Login';
@@ -170,6 +183,7 @@ function login() {
       }
 
       refreshStatus();
+      viewTab('raw');
     },
     'json'
   );

@@ -22,6 +22,7 @@
     if (count($myArray) == 1) {
       // success, handle session
       session_start();
+      $_SESSION['logged'] = true;
       $_SESSION['username'] = $login_username;
       $_SESSION['name'] = $myArray[0]['fname'];
       
