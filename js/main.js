@@ -156,12 +156,16 @@ function setParam(index, value) {
 
 function refreshStatus() {
   var loginBtn = document.getElementById('loginBtn');
+  var userOptions = document.getElementById('userOptions');
+  var greeting = document.getElementById('greeting');
+
   if (loggedIn) {
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = `Welcome, ${username}`;
+    loginBtn.style.display = 'none';
+    userOptions.style.display = 'inline-block';
+    greeting.textContent = `Welcome, ${username}`;
   } else {
-    loginBtn.disabled = false;
-    loginBtn.innerHTML = 'Login';
+    loginBtn.style.display = 'inline';
+    userOptions.style.display = 'none';
   }
 }
 
@@ -169,7 +173,7 @@ function login() {
   username = document.getElementById('l_username');
   password = document.getElementById('l_password');
 
-  var request = $.post(
+  $.post(
     'login.php',
     {
       username: username.value,
@@ -187,4 +191,13 @@ function login() {
     },
     'json'
   );
+}
+
+function logout() {
+  $.post('logout.php', done => {
+    loggedIn = false;
+    username = '';
+
+    refreshStatus();
+  });
 }
