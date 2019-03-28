@@ -8,6 +8,9 @@ var height;
 
 var params = [];
 
+var loggedIn = false;
+var username = '';
+
 window.onload = function() {
   tabs = document.getElementsByClassName('tab-content');
   tabButtons = document.getElementsByClassName('tab-button');
@@ -135,10 +138,39 @@ function setParam(index, value) {
   }
 }
 
+function refreshStatus() {
+  var loginBtn = document.getElementById('loginBtn');
+  console.log(loggedIn);
+  if (loggedIn) {
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = `Welcome, ${username}`;
+
+    viewTab('raw');
+  } else {
+    loginBtn.disabled = false;
+    loginBtn.innerHTML = 'Login';
+  }
+}
+
 function login() {
   username = document.getElementById('l_username');
   password = document.getElementById('l_password');
 
-  console.log(username.value);
-  console.log(password.value);
+  var request = $.post(
+    'login.php',
+    {
+      username: username.value,
+      password: password.value
+    },
+    data => {
+      console.log(data);
+      if (data.result == 'success') {
+        loggedIn = true;
+        username = data.name;
+      }
+
+      refreshStatus();
+    },
+    'json'
+  );
 }
