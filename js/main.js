@@ -15,7 +15,7 @@ window.onload = function() {
   tabs = document.getElementsByClassName('tab-content');
   tabButtons = document.getElementsByClassName('tab-button');
 
-  $.getJSON('database.php', function(results) {
+  $.getJSON('database.json', function(results) {
     data = results;
     // had to add this in to process dates from MySQL
     data.forEach(d => (d.Date = new Date(d.Date)));
