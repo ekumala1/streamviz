@@ -15,7 +15,7 @@ window.onload = function() {
   tabs = document.getElementsByClassName('tab-content');
   tabButtons = document.getElementsByClassName('tab-button');
 
-  $.getJSON('database.json', function(results) {
+  $.getJSON('php/database.php', function(results) {
     data = results;
     // had to add this in to process dates from MySQL
     data.forEach(d => (d.Date = new Date(d.Date)));
@@ -26,7 +26,7 @@ window.onload = function() {
   });
 
   $.post(
-    'checkLogin.php',
+    'php/checkLogin.php',
     data => {
       console.log(data);
       if (data.result == 'success') {
@@ -174,7 +174,7 @@ function login() {
   password = document.getElementById('l_password');
 
   $.post(
-    'login.php',
+    'php/login.php',
     {
       username: username.value,
       password: password.value
@@ -194,7 +194,7 @@ function login() {
 }
 
 function logout() {
-  $.post('logout.php', done => {
+  $.post('php/logout.php', done => {
     loggedIn = false;
     username = '';
 
