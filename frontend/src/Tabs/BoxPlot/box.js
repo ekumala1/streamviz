@@ -4,11 +4,10 @@ var whiskerWidth = 40;
 var boxWidth = 50;
 
 class boxPlot {
-  constructor(data) {
-    this.svg = d3.select('#boxsvg');
-    var svgElement = document.getElementById('boxsvg');
+  constructor() {
+    this.svg = d3.select('#svg');
+    var svgElement = document.getElementById('svg');
 
-    this.data = data;
     this.width = svgElement.getBoundingClientRect().width;
     this.height = svgElement.getBoundingClientRect().height;
 

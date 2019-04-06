@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import './BoxPlot.css';
+import './ScatterPlot.css';
 
-import boxPlot from './box';
+import scatterPlot from './scatter';
 import { Dropdown } from 'semantic-ui-react';
 
 class RawData extends Component {
+  params = [];
+
   constructor() {
     super();
     this.state = { keys: [], data: [] };
   }
 
   componentDidMount() {
-    this.box = new boxPlot();
-    this.box.clear();
-    this.box.buildAxes();
+    this.scatter = new scatterPlot();
+    this.scatter.clear();
+    this.scatter.buildAxes();
 
     fetch('http://localhost:5000/streams')
       .then(response => response.json())
@@ -22,12 +24,26 @@ class RawData extends Component {
         this.state.data.forEach(d => (d.Date = new Date(d.Date)));
         console.log(this.state.data);
 
-        this.box.data = this.state.data;
+        this.scatter.data = this.state.data;
       });
   }
 
-  setParam(event, data) {
-    this.box.buildBox(data.value);
+  setParam1(event, data) {
+    this.params[0] = data.value;
+    console.log(this.params);
+
+    if (this.params.length === 2) {
+      this.scatter.buildScatter(this.params);
+    }
+  }
+
+  setParam2(event, data) {
+    this.params[1] = data.value;
+    console.log(this.params);
+
+    if (this.params.length === 2) {
+      this.scatter.buildScatter(this.params);
+    }
   }
 
   render() {
@@ -39,14 +55,21 @@ class RawData extends Component {
       <div className="container">
         <div className="sidebar">
           <h2>choices</h2>
-          <p>Variable:</p>
+          <p>Variable 1:</p>
           <Dropdown
-            placeholder="Variables"
+            placeholder="Variable"
             fluid
-            multiple
             selection
             options={options}
-            onChange={this.setParam.bind(this)}
+            onChange={this.setParam1.bind(this)}
+          />
+          <p>Variable 2:</p>
+          <Dropdown
+            placeholder="Variable"
+            fluid
+            selection
+            options={options}
+            onChange={this.setParam2.bind(this)}
           />
         </div>
         <div className="content">

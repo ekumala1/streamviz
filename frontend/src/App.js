@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import TopBar from './TopBar/TopBar';
 import BottomBar from './BottomBar/BottomBar';
 import BoxPlot from './Tabs/BoxPlot/BoxPlot';
+import ScatterPlot from './Tabs/ScatterPlot/ScatterPlot';
 import RawData from './Tabs/RawData/RawData';
 
 import './App.css';
@@ -19,7 +20,7 @@ class App extends Component {
           <div id="content">
             <Route exact path="/" render={() => <Redirect to="/raw" />} />
             <Route path="/box" component={BoxPlot} />
-            <Route path="/scatter" component={RawData} />
+            <Route path="/scatter" component={ScatterPlot} />
             <Route path="/time" component={RawData} />
             <Route path="/login" component={RawData} />
             <Route path="/raw" component={RawData} />
