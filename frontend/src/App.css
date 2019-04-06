@@ -8,3 +8,19 @@
 .ui.item.menu {
   margin: 0;
 }
+
+.bubble {
+  fill: orange;
+}
+
+.line {
+  fill: none;
+  stroke: orange;
+  stroke-width: 2px;
+}
+
+.box {
+  fill: white;
+  stroke: orange;
+  stroke-width: 2px;
+}

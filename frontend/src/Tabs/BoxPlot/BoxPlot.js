@@ -1,23 +1,54 @@
 import React, { Component } from 'react';
 import './BoxPlot.css';
 
+import boxPlot from './box';
+import { Dropdown } from 'semantic-ui-react';
+
 class RawData extends Component {
+  constructor() {
+    super();
+    this.state = { keys: [], data: [] };
+  }
   componentDidMount() {
+    this.box = new boxPlot();
+    this.box.clear();
+    this.box.buildAxes();
+
     fetch('http://localhost:5000/streams')
       .then(response => response.json())
       .then(result => {
-        this.setState({ data: result });
+        this.setState({ keys: Object.keys(result[0]), data: result });
         this.state.data.forEach(d => (d.Date = new Date(d.Date)));
         console.log(this.state.data);
+
+        this.box.data = this.state.data;
       });
   }
 
+  setParam(event, data) {
+    this.params = data.value;
+    console.log(this.params);
+    this.box.buildBox(this.params);
+  }
+
   render() {
+    var options = this.state.keys.map(key => {
+      return { key: key, text: key, value: key };
+    });
+
     return (
       <div class="container">
         <div class="sidebar">
           <h2>choices</h2>
           <p>Variable:</p>
+          <Dropdown
+            placeholder="Variables"
+            fluid
+            multiple
+            selection
+            options={options}
+            onChange={this.setParam.bind(this)}
+          />
         </div>
         <div class="content">
           <svg id="boxsvg" width="1195.5px" height="100%" />
