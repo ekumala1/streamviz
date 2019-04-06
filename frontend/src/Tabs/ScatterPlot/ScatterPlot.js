@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './ScatterPlot.css';
 
 import scatterPlot from './scatter';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Checkbox } from 'semantic-ui-react';
 
 class RawData extends Component {
   params = [];
@@ -73,7 +73,9 @@ class RawData extends Component {
           />
         </div>
         <div className="content">
-          <svg id="svg" width="1195.5px" height="100%" />
+          <svg id="svg" width="1195.5px" height="95%" />
+          <br />
+          <Checkbox toggle label="Show line of best fit" />
         </div>
       </div>
     );

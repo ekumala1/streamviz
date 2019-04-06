@@ -1,5 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## stuff to do to run
+
+To install dependencies on first pull, `yarn install` will install all necessary dependencies. After this is done, `yarn start` should work.
+
 ## Available Scripts
 
 In the project directory, you can run:

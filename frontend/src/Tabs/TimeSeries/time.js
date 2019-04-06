@@ -39,6 +39,21 @@ class timePlot {
       .append('g')
       .attr('transform', 'translate(50, 0)')
       .call(d3.axisLeft().scale(this.yScale));
+
+    this.axisHorizontal = this.svg
+      .append('text')
+      .attr('transform', `translate(${this.width / 2}, ${this.height - 10})`)
+      .style('text-anchor', 'middle')
+      .text('Time');
+
+    this.axisVertical = this.svg
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0)
+      .attr('x', 0 - this.height / 2)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('');
   }
 
   updateAxes() {
@@ -62,6 +77,7 @@ class timePlot {
   }
 
   filterData(params) {
+    this.axisVertical.text(params[0]);
     this.fData = this.data.filter(d => d[params[0]] != null);
 
     // get average entry by date

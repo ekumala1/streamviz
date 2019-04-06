@@ -37,6 +37,15 @@ class boxPlot {
       .append('g')
       .attr('transform', 'translate(50, 0)')
       .call(d3.axisLeft().scale(this.yScale));
+
+    this.axisVertical = this.svg
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0)
+      .attr('x', 0 - this.height / 2)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Amount');
   }
 
   updateAxes(params) {
