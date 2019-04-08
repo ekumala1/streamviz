@@ -57,10 +57,8 @@ class boxPlot {
     });
 
     var temp = [];
-    for (var i in params) {
+    for (var i in params)
       temp = temp.concat(this.fData.map(d => +d[params[i]]));
-      // console.log(temp);
-    }
 
     var yExtent = d3.extent(temp),
       yRange = yExtent[1] - yExtent[0];

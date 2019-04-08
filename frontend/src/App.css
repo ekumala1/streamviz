@@ -4,6 +4,11 @@
   overflow-y: scroll;
 }
 
+.container {
+  height: 100%;
+  display: flex;
+}
+
 /* for some reason semantic menus have default margin */
 .ui.item.menu {
   margin: 0;

@@ -20,7 +20,7 @@ class RawData extends Component {
 
     for (var row of this.state.data) {
       table += '<tr>';
-      for (var key in row) table += `<td>${row[key]}</td>`;
+      for (key in row) table += `<td>${row[key]}</td>`;
       table += '</tr>';
     }
 
