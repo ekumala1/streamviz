@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class RawData extends Component {
   componentDidMount() {
-    fetch('http://localhost:5000/streams')
+    fetch('http://localhost:8000/streams')
       .then(response => response.json())
       .then(result => {
         this.setState({ data: result });

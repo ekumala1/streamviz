@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
 
 class BottomBar extends Component {
   render() {
     return (
       <Menu>
-        <Menu.Item as={Link} to="/login">
+        <Menu.Item as={NavLink} to="/login" activeClassName="active">
           Login
         </Menu.Item>
-        <Menu.Item as={Link} to="/raw" position="right">
+        <Menu.Item
+          as={NavLink}
+          to="/raw"
+          position="right"
+          activeClassName="active"
+        >
           View Raw Data
         </Menu.Item>
       </Menu>

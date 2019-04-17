@@ -15,7 +15,7 @@ class RawData extends Component {
     this.box.clear();
     this.box.buildAxes();
 
-    fetch('http://localhost:5000/streams')
+    fetch('http://localhost:8000/streams')
       .then(response => response.json())
       .then(result => {
         this.setState({ keys: Object.keys(result[0]), data: result });
