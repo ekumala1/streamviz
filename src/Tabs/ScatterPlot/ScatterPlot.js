@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import './ScatterPlot.css';
+import React, { Component } from "react";
+import "./ScatterPlot.css";
 
-import scatterPlot from './scatter';
-import { Dropdown, Checkbox } from 'semantic-ui-react';
+import scatterPlot from "./scatter";
+import { Dropdown, Checkbox } from "semantic-ui-react";
 
 class RawData extends Component {
   params = [];
@@ -17,7 +17,7 @@ class RawData extends Component {
     this.scatter.clear();
     this.scatter.buildAxes();
 
-    fetch('http://localhost:8000/streams')
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         this.setState({ keys: Object.keys(result[0]), data: result });

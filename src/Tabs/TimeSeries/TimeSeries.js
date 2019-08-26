@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import './TimeSeries.css';
+import React, { Component } from "react";
+import "./TimeSeries.css";
 
-import timePlot from './time';
-import { Dropdown } from 'semantic-ui-react';
+import timePlot from "./time";
+import { Dropdown } from "semantic-ui-react";
 
 class TimeSeries extends Component {
   params = [];
@@ -16,7 +16,7 @@ class TimeSeries extends Component {
     this.time = new timePlot();
     this.time.clear();
 
-    fetch('http://localhost:8000/streams')
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         this.setState({ keys: Object.keys(result[0]), data: result });

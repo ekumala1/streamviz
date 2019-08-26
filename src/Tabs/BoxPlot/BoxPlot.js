@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import './BoxPlot.css';
+import React, { Component } from "react";
+import "./BoxPlot.css";
 
-import boxPlot from './box';
-import { Dropdown } from 'semantic-ui-react';
+import boxPlot from "./box";
+import { Dropdown } from "semantic-ui-react";
 
 class RawData extends Component {
   constructor() {
@@ -15,7 +15,7 @@ class RawData extends Component {
     this.box.clear();
     this.box.buildAxes();
 
-    fetch('http://localhost:8000/streams')
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         this.setState({ keys: Object.keys(result[0]), data: result });
