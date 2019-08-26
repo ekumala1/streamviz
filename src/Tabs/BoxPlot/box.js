@@ -1,12 +1,12 @@
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 var whiskerWidth = 40;
 var boxWidth = 50;
 
 class boxPlot {
   constructor() {
-    this.svg = d3.select('#svg');
-    var svgElement = document.getElementById('svg');
+    this.svg = d3.select("#svg");
+    var svgElement = document.getElementById("svg");
 
     this.width = svgElement.getBoundingClientRect().width;
     this.height = svgElement.getBoundingClientRect().height;
@@ -15,7 +15,7 @@ class boxPlot {
   }
 
   clear() {
-    this.svg.html('');
+    this.svg.html("");
   }
 
   buildAxes() {
@@ -30,22 +30,22 @@ class boxPlot {
       .range([this.height - 50, 50]);
 
     this.xSelect = this.svg
-      .append('g')
-      .attr('transform', `translate(0, ${this.height - 50})`)
+      .append("g")
+      .attr("transform", `translate(0, ${this.height - 50})`)
       .call(d3.axisBottom().scale(this.xScale));
     this.ySelect = this.svg
-      .append('g')
-      .attr('transform', 'translate(50, 0)')
+      .append("g")
+      .attr("transform", "translate(50, 0)")
       .call(d3.axisLeft().scale(this.yScale));
 
     this.axisVertical = this.svg
-      .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0)
-      .attr('x', 0 - this.height / 2)
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .text('Amount');
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("x", 0 - this.height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Amount");
   }
 
   updateAxes(params) {
@@ -57,8 +57,8 @@ class boxPlot {
     });
 
     var temp = [];
-    for (var i in params)
-      temp = temp.concat(this.fData.map(d => +d[params[i]]));
+    var getParam = d => +d[params[i]];
+    for (var i in params) temp = temp.concat(this.fData.map(getParam));
 
     var yExtent = d3.extent(temp),
       yRange = yExtent[1] - yExtent[0];
@@ -83,38 +83,40 @@ class boxPlot {
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
     this.updateAxes(params);
     this.svg
-      .selectAll('.boxplot')
+      .selectAll(".boxplot")
       .transition()
       .duration(this.duration)
-      .style('fill-opacity', 0)
-      .style('stroke-opacity', 0)
+      .style("fill-opacity", 0)
+      .style("stroke-opacity", 0)
       .remove();
 
     // make proportional whisker/box widths
     whiskerWidth = this.xScale.bandwidth() * 0.3;
     boxWidth = this.xScale.bandwidth() * 0.4;
 
+    var getParam = d => +d[params[i]];
+    var getQuantile = d => d3.quantile(array, d);
     // for every selected column
     for (var i in params) {
       // create a group for easy manipulation
       var g = this.svg
-        .append('g')
-        .attr('class', 'boxplot')
+        .append("g")
+        .attr("class", "boxplot")
         .attr(
-          'transform',
+          "transform",
           `translate(${this.xScale(params[i]) +
             this.xScale.bandwidth() / 2 -
             boxWidth / 2}, 0)`
         )
-        .style('stroke-opacity', 0);
+        .style("stroke-opacity", 0);
 
       // 1d dataset of current column
-      var array = this.fData.map(d => +d[params[i]]);
+      var array = this.fData.map(getParam);
       array = array.sort((a, b) => a - b);
 
       // find quantiles
       var q = [0, 0.25, 0.5, 0.75, 1];
-      q = q.map(d => d3.quantile(array, d));
+      q = q.map(getQuantile);
 
       // find outliers
       var iqr = q[3] - q[1];
@@ -130,7 +132,7 @@ class boxPlot {
 
       g.transition()
         .duration(this.duration)
-        .style('stroke-opacity', 1);
+        .style("stroke-opacity", 1);
     }
   }
 
@@ -140,69 +142,69 @@ class boxPlot {
 
     // bottom whisker
     group
-      .append('line')
-      .attr('class', 'line')
-      .attr('x1', offset)
-      .attr('y1', this.yScale(min))
-      .attr('x2', whiskerWidth + offset)
-      .attr('y2', this.yScale(min));
+      .append("line")
+      .attr("class", "line")
+      .attr("x1", offset)
+      .attr("y1", this.yScale(min))
+      .attr("x2", whiskerWidth + offset)
+      .attr("y2", this.yScale(min));
 
     // line between whiskers
     group
-      .append('line')
-      .attr('class', 'line')
-      .attr('x1', boxWidth / 2)
-      .attr('y1', this.yScale(min))
-      .attr('x2', boxWidth / 2)
-      .attr('y2', this.yScale(max));
+      .append("line")
+      .attr("class", "line")
+      .attr("x1", boxWidth / 2)
+      .attr("y1", this.yScale(min))
+      .attr("x2", boxWidth / 2)
+      .attr("y2", this.yScale(max));
 
     // top whisker
     group
-      .append('line')
-      .attr('class', 'line')
-      .attr('x1', offset)
-      .attr('y1', this.yScale(max))
-      .attr('x2', whiskerWidth + offset)
-      .attr('y2', this.yScale(max));
+      .append("line")
+      .attr("class", "line")
+      .attr("x1", offset)
+      .attr("y1", this.yScale(max))
+      .attr("x2", whiskerWidth + offset)
+      .attr("y2", this.yScale(max));
   }
 
   drawBox(group, quantiles) {
     // box
     group
-      .append('rect')
-      .attr('class', 'box')
-      .attr('width', boxWidth)
-      .attr('y', this.yScale(quantiles[3]))
-      .attr('height', this.yScale(quantiles[1]) - this.yScale(quantiles[3]));
+      .append("rect")
+      .attr("class", "box")
+      .attr("width", boxWidth)
+      .attr("y", this.yScale(quantiles[3]))
+      .attr("height", this.yScale(quantiles[1]) - this.yScale(quantiles[3]));
 
     // median
     group
-      .append('line')
-      .attr('class', 'line')
-      .attr('x1', 0)
-      .attr('y1', this.yScale(quantiles[2]))
-      .attr('x2', boxWidth)
-      .attr('y2', this.yScale(quantiles[2]));
+      .append("line")
+      .attr("class", "line")
+      .attr("x1", 0)
+      .attr("y1", this.yScale(quantiles[2]))
+      .attr("x2", boxWidth)
+      .attr("y2", this.yScale(quantiles[2]));
   }
 
   drawOutliers(group, outliers) {
-    console.log('drawing ' + outliers.length + ' outliers');
-    var selection = group.selectAll('.bubble').data(outliers);
+    console.log("drawing " + outliers.length + " outliers");
+    var selection = group.selectAll(".bubble").data(outliers);
     var offset = boxWidth / 2;
 
     var enter = selection
       .enter()
-      .append('circle')
-      .attr('class', 'bubble')
-      .attr('r', 0)
-      .attr('cx', offset)
-      .attr('cy', d => this.yScale(d))
-      .style('opacity', 0.5);
+      .append("circle")
+      .attr("class", "bubble")
+      .attr("r", 0)
+      .attr("cx", offset)
+      .attr("cy", d => this.yScale(d))
+      .style("opacity", 0.5);
 
     enter
       .transition()
       .duration(this.duration)
-      .attr('r', 3);
+      .attr("r", 3);
   }
   // end of box plotting functions
 }
