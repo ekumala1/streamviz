@@ -11,3 +11,5 @@ If yarn is not installed locally, install it from [the website](https://yarnpkg.
 ## Running the app
 
 `yarn start`
+
+The server will run on `localhost:3000`
