@@ -1,12 +1,12 @@
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 // smh js doesn't have average built in
 var average = arr => arr.reduce((a, b) => a + b) / arr.length;
 
 class timePlot {
   constructor() {
-    this.svg = d3.select('#svg');
-    var svgElement = document.getElementById('svg');
+    this.svg = d3.select("#svg");
+    var svgElement = document.getElementById("svg");
 
     this.width = svgElement.getBoundingClientRect().width;
     this.height = svgElement.getBoundingClientRect().height;
@@ -15,7 +15,7 @@ class timePlot {
   }
 
   clear() {
-    this.svg.html('');
+    this.svg.html("");
   }
 
   buildAxes() {
@@ -32,28 +32,28 @@ class timePlot {
       .range([this.height - 50, 50]);
 
     this.xSelect = this.svg
-      .append('g')
-      .attr('transform', `translate(0, ${this.height - 50})`)
+      .append("g")
+      .attr("transform", `translate(0, ${this.height - 50})`)
       .call(d3.axisBottom().scale(this.xScale));
     this.ySelect = this.svg
-      .append('g')
-      .attr('transform', 'translate(50, 0)')
+      .append("g")
+      .attr("transform", "translate(50, 0)")
       .call(d3.axisLeft().scale(this.yScale));
 
     this.axisHorizontal = this.svg
-      .append('text')
-      .attr('transform', `translate(${this.width / 2}, ${this.height - 10})`)
-      .style('text-anchor', 'middle')
-      .text('Time');
+      .append("text")
+      .attr("transform", `translate(${this.width / 2}, ${this.height - 10})`)
+      .style("text-anchor", "middle")
+      .text("Time");
 
     this.axisVertical = this.svg
-      .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0)
-      .attr('x', 0 - this.height / 2)
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .text('');
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("x", 0 - this.height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("");
   }
 
   updateAxes() {
@@ -83,7 +83,7 @@ class timePlot {
     // get average entry by date
     this.fData = d3
       .nest()
-      .key(d => d.Date)
+      .key(d => d.date)
       .rollup(d => {
         var values = d.map(e => +e[params[0]]);
         return average(values);
@@ -92,10 +92,10 @@ class timePlot {
     // date is now in the format of a String because rollup converts Objects toString()
 
     // convert date back to Date object
-    this.fData = this.fData.map(d => {
-      d.key = new Date(d.key);
-      return d;
-    });
+    // this.fData = this.fData.map(d => {
+    //   d.key = new Date(d.key);
+    //   return d;
+    // });
 
     // sort data to put dates in order
     this.fData = this.fData.sort((a, b) => b.key - a.key);
@@ -103,28 +103,28 @@ class timePlot {
   }
 
   buildScatter() {
-    var selection = this.svg.selectAll('.bubble').data(this.fData, d => d);
+    var selection = this.svg.selectAll(".bubble").data(this.fData, d => d);
 
     selection
       .exit()
       .transition()
       .duration(this.duration)
-      .attr('r', 0)
+      .attr("r", 0)
       .remove();
 
     var enter = selection
       .enter()
-      .append('circle')
-      .attr('class', 'bubble')
-      .attr('r', 0)
-      .attr('cx', d => this.xScale(d.key))
-      .attr('cy', d => this.yScale(d.value))
-      .style('opacity', 1);
+      .append("circle")
+      .attr("class", "bubble")
+      .attr("r", 0)
+      .attr("cx", d => this.xScale(d.key))
+      .attr("cy", d => this.yScale(d.value))
+      .style("opacity", 1);
 
     enter
       .transition()
       .duration(this.duration)
-      .attr('r', 3);
+      .attr("r", 3);
   }
 
   // courtesy of https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89
@@ -134,23 +134,23 @@ class timePlot {
       .x(d => this.xScale(d.key))
       .y(d => this.yScale(d.value));
 
-    d3.selectAll('.line')
+    d3.selectAll(".line")
       .transition()
       .duration(this.duration)
-      .style('stroke-opacity', 0)
+      .style("stroke-opacity", 0)
       .remove();
 
     var path = this.svg
-      .append('path')
+      .append("path")
       .datum(this.fData)
-      .style('stroke-opacity', 0)
-      .attr('class', 'line')
-      .attr('d', line);
+      .style("stroke-opacity", 0)
+      .attr("class", "line")
+      .attr("d", line);
 
     path
       .transition()
       .duration(this.duration)
-      .style('stroke-opacity', 0.5);
+      .style("stroke-opacity", 0.5);
   }
 
   buildLinePlot(params) {
