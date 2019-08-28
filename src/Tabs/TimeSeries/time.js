@@ -23,7 +23,7 @@ class timePlot {
     this.xScale = d3
       .scaleTime()
       // .domain([0, 1])
-      .domain(d3.extent(this.data, d => d.Date))
+      .domain(d3.extent(this.data, d => d.date))
       .range([50, this.width - 100]);
 
     this.yScale = d3
@@ -78,7 +78,7 @@ class timePlot {
 
   filterData(params) {
     this.axisVertical.text(params[0]);
-    this.fData = this.data.filter(d => d[params[0]] != null);
+    this.fData = this.data.filter(d => d[params[0]] != null && d.date != null);
 
     // get average entry by date
     this.fData = d3
@@ -92,14 +92,13 @@ class timePlot {
     // date is now in the format of a String because rollup converts Objects toString()
 
     // convert date back to Date object
-    // this.fData = this.fData.map(d => {
-    //   d.key = new Date(d.key);
-    //   return d;
-    // });
+    this.fData = this.fData.map(d => {
+      d.key = new Date(d.key);
+      return d;
+    });
 
     // sort data to put dates in order
     this.fData = this.fData.sort((a, b) => b.key - a.key);
-    console.log(this.fData);
   }
 
   buildScatter() {

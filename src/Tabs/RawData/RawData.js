@@ -9,8 +9,7 @@ class RawData extends Component {
       .then(response => response.json())
       .then(result => {
         this.setState({ data: result });
-        this.state.data.forEach(d => (d.Date = new Date(d.Date)));
-        console.log(this.state.data);
+        this.state.data.forEach(d => (d.date = new Date(d.date)));
       });
   }
 

@@ -20,8 +20,9 @@ class TimeSeries extends Component {
       .then(response => response.json())
       .then(result => {
         this.setState({ keys: Object.keys(result[0]), data: result });
-        this.state.data.forEach(d => (d.Date = new Date(d.Date)));
-        console.log(this.state.data);
+        this.state.data.forEach(
+          d => (d.date = d.date == null ? null : new Date(d.date))
+        );
 
         this.time.data = this.state.data;
         this.time.buildAxes();

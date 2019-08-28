@@ -21,7 +21,7 @@ class RawData extends Component {
       .then(response => response.json())
       .then(result => {
         this.setState({ keys: Object.keys(result[0]), data: result });
-        this.state.data.forEach(d => (d.Date = new Date(d.Date)));
+        this.state.data.forEach(d => (d.date = new Date(d.date)));
         console.log(this.state.data);
 
         this.scatter.data = this.state.data;
