@@ -18,19 +18,6 @@ class RawData extends Component {
       });
   }
 
-  componentDidUpdate() {
-    // let table = "";
-    // table += "<tr>";
-    // for (var key in this.state.data[0]) table += `<th>${key}</th>`;
-    // table += "</tr>";
-    // for (var row of this.state.data) {
-    //   table += "<tr>";
-    //   for (key in row) table += `<td>${row[key]}</td>`;
-    //   table += "</tr>";
-    // }
-    // this.refs.raw.innerHTML += table;
-  }
-
   getFile() {
     console.log("hi");
 
@@ -57,21 +44,7 @@ class RawData extends Component {
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
-        <table>
-          <tr>
-            {this.state.data &&
-              Object.keys(this.state.data[0]).map(value => <th>{value}</th>)}
-          </tr>
-          {this.state.data &&
-            this.state.data.map(row => (
-              <tr>
-                {Object.values(row).map(value => (
-                  <td>{value}</td>
-                ))}
-              </tr>
-            ))}
-        </table>
-        {/* <Table celled>
+        <Table celled>
           <Table.Header>
             <Table.Row>
               {this.state.data &&
@@ -90,7 +63,7 @@ class RawData extends Component {
                 </Table.Row>
               ))}
           </Table.Body>
-        </Table> */}
+        </Table>
       </div>
     );
   }
