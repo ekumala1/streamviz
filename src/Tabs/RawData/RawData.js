@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Table } from "semantic-ui-react";
+import { Button, Table, Pagination } from "semantic-ui-react";
 
 import "./RawData.css";
 
@@ -15,6 +15,8 @@ class RawData extends Component {
       .then(result => {
         this.setState({ data: result });
         this.state.data.forEach(d => (d.date = new Date(d.date)));
+        // this.setState({ filteredData: this.state.data });
+        console.log(this.state);
       });
   }
 
@@ -58,39 +60,22 @@ class RawData extends Component {
           <Button onClick={this.getFile}>Download</Button>
         </div>
         <table>
-          <tr>
-            {this.state.data &&
-              Object.keys(this.state.data[0]).map(value => <th>{value}</th>)}
-          </tr>
-          {this.state.data &&
-            this.state.data.map(row => (
-              <tr>
-                {Object.values(row).map(value => (
-                  <td>{value}</td>
-                ))}
-              </tr>
-            ))}
-        </table>
-        {/* <Table celled>
-          <Table.Header>
-            <Table.Row>
+          <tbody>
+            <tr>
               {this.state.data &&
-                Object.keys(this.state.data[0]).map(value => (
-                  <Table.HeaderCell>{value}</Table.HeaderCell>
-                ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+                Object.keys(this.state.data[0]).map(value => <th>{value}</th>)}
+            </tr>
             {this.state.data &&
               this.state.data.map(row => (
-                <Table.Row>
+                <tr>
                   {Object.values(row).map(value => (
-                    <Table.Cell>{value}</Table.Cell>
+                    <td>{value}</td>
                   ))}
-                </Table.Row>
+                </tr>
               ))}
-          </Table.Body>
-        </Table> */}
+          </tbody>
+        </table>
+        <Pagination defaultActivePage={5} totalPages={10} />
       </div>
     );
   }
