@@ -4,18 +4,24 @@ import { Button, Table, Pagination } from "semantic-ui-react";
 import "./RawData.css";
 
 class RawData extends Component {
+  PAGE_SIZE = 30;
+
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { numPages: 0 };
+    this.updatePage = this.updatePage.bind(this);
   }
 
   componentDidMount() {
     fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
-        this.setState({ data: result });
-        this.state.data.forEach(d => (d.date = new Date(d.date)));
+        this.setState({
+          data: result,
+          numPages: Math.floor(result.length / this.PAGE_SIZE)
+        });
         // this.setState({ filteredData: this.state.data });
+        this.setState({ fData: this.state.data.slice(0, this.PAGE_SIZE) });
         console.log(this.state);
       });
   }
@@ -53,6 +59,18 @@ class RawData extends Component {
       });
   }
 
+  updatePage(e, { activePage }) {
+    activePage--;
+
+    this.setState({
+      fData: this.state.data.slice(
+        activePage * this.PAGE_SIZE,
+        (activePage + 1) * this.PAGE_SIZE
+      )
+    });
+    console.log(this.state);
+  }
+
   render() {
     return (
       <div>
@@ -62,11 +80,11 @@ class RawData extends Component {
         <table>
           <tbody>
             <tr>
-              {this.state.data &&
-                Object.keys(this.state.data[0]).map(value => <th>{value}</th>)}
+              {this.state.fData &&
+                Object.keys(this.state.fData[0]).map(value => <th>{value}</th>)}
             </tr>
-            {this.state.data &&
-              this.state.data.map(row => (
+            {this.state.fData &&
+              this.state.fData.map(row => (
                 <tr>
                   {Object.values(row).map(value => (
                     <td>{value}</td>
@@ -75,7 +93,11 @@ class RawData extends Component {
               ))}
           </tbody>
         </table>
-        <Pagination defaultActivePage={5} totalPages={10} />
+        <Pagination
+          defaultActivePage={1}
+          totalPages={this.state.numPages}
+          onPageChange={this.updatePage}
+        />
       </div>
     );
   }
