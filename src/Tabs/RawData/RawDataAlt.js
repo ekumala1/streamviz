@@ -44,26 +44,22 @@ class RawData extends Component {
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
-        <Table celled>
-          <Table.Header>
-            <Table.Row>
-              {this.state.data &&
-                Object.keys(this.state.data[0]).map(value => (
-                  <Table.HeaderCell>{value}</Table.HeaderCell>
-                ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.state.data &&
-              this.state.data.map(row => (
-                <Table.Row>
+        <table>
+          <tbody>
+            <tr>
+              {this.state.fData &&
+                Object.keys(this.state.fData[0]).map(value => <th>{value}</th>)}
+            </tr>
+            {this.state.fData &&
+              this.state.fData.map(row => (
+                <tr>
                   {Object.values(row).map(value => (
-                    <Table.Cell>{value}</Table.Cell>
+                    <td>{value}</td>
                   ))}
-                </Table.Row>
+                </tr>
               ))}
-          </Table.Body>
-        </Table>
+          </tbody>
+        </table>
       </div>
     );
   }

@@ -8,7 +8,7 @@ class RawData extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { numPages: 0 };
+    this.state = { numPages: 0, page: 1 };
     this.updatePage = this.updatePage.bind(this);
   }
 
@@ -20,9 +20,8 @@ class RawData extends Component {
           data: result,
           numPages: Math.floor(result.length / this.PAGE_SIZE)
         });
-        // this.setState({ filteredData: this.state.data });
-        this.setState({ fData: this.state.data.slice(0, this.PAGE_SIZE) });
-        console.log(this.state);
+
+        this.updatePage(null, { activePage: 1 });
       });
   }
 
@@ -68,7 +67,6 @@ class RawData extends Component {
         (activePage + 1) * this.PAGE_SIZE
       )
     });
-    console.log(this.state);
   }
 
   render() {
@@ -77,22 +75,28 @@ class RawData extends Component {
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
-        <table>
-          <tbody>
-            <tr>
+
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
               {this.state.fData &&
-                Object.keys(this.state.fData[0]).map(value => <th>{value}</th>)}
-            </tr>
+                Object.keys(this.state.fData[0]).map(value => (
+                  <Table.HeaderCell>{value}</Table.HeaderCell>
+                ))}
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
             {this.state.fData &&
               this.state.fData.map(row => (
-                <tr>
+                <Table.Row>
                   {Object.values(row).map(value => (
-                    <td>{value}</td>
+                    <Table.Cell>{value}</Table.Cell>
                   ))}
-                </tr>
+                </Table.Row>
               ))}
-          </tbody>
-        </table>
+          </Table.Body>
+        </Table>
+
         <Pagination
           defaultActivePage={1}
           totalPages={this.state.numPages}
