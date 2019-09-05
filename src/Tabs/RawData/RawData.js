@@ -102,7 +102,7 @@ class RawData extends Component {
           <Button onClick={this.getFile}>Download</Button>
         </div>
 
-        <Table celled>
+        <Table sortable celled>
           <Table.Header>
             <Table.Row>
               {this.state.fData &&
