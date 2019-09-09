@@ -1,10 +1,11 @@
-import React, { Component } from "react";
-import { Button, Table, Pagination } from "semantic-ui-react";
+import React, { Component, createRef } from "react";
+import { Button, Table, Pagination, Sticky, Ref } from "semantic-ui-react";
 
 import "./RawData.css";
 
 class RawData extends Component {
-  PAGE_SIZE = 30;
+  PAGE_SIZE = 17;
+  contextRef = createRef();
 
   constructor(props) {
     super(props);
@@ -19,7 +20,7 @@ class RawData extends Component {
       .then(result => {
         this.setState({
           data: result,
-          numPages: Math.floor(result.length / this.PAGE_SIZE)
+          numPages: Math.ceil(result.length / this.PAGE_SIZE)
         });
 
         this.updatePage(null, { activePage: 1 });
@@ -97,12 +98,12 @@ class RawData extends Component {
   render() {
     var getString = ascending => (ascending ? "ascending" : "descending");
     return (
-      <div>
+      <div style={{ overflow: "auto" }}>
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
 
-        <Table sortable celled>
+        <Table sortable celled style={{ margin: 0 }}>
           <Table.Header>
             <Table.Row>
               {this.state.fData &&
@@ -136,6 +137,7 @@ class RawData extends Component {
           defaultActivePage={1}
           totalPages={this.state.numPages}
           onPageChange={this.updatePage}
+          style={{ "margin-top": 10 }}
         />
       </div>
     );
