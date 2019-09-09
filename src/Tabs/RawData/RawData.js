@@ -71,7 +71,7 @@ class RawData extends Component {
   }
 
   handleSort(column) {
-    if (column != this.state.column) {
+    if (column !== this.state.column) {
       var data = this.state.data;
       data.sort((a, b) => a[column] - b[column]);
 

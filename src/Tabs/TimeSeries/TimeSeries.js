@@ -47,8 +47,9 @@ class TimeSeries extends Component {
           <h2>choices</h2>
           <p>Variable:</p>
           <Dropdown
-            placeholder="Variable"
+            placeholder="Variables"
             fluid
+            multiple
             selection
             options={options}
             onChange={this.setParam.bind(this)}
