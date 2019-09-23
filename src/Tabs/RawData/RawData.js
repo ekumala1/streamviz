@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Table, Pagination, Dropdown } from "semantic-ui-react";
+import { Button, Dropdown } from "semantic-ui-react";
 
 import "./RawData.css";
 
@@ -11,7 +11,6 @@ class RawData extends Component {
     // column and direction are for sorting
     this.state = { numPages: 0, page: 1, column: null, direction: true };
     this.handleSort = this.handleSort.bind(this);
-    this.updatePage = this.updatePage.bind(this);
   }
 
   componentDidMount() {
@@ -28,8 +27,6 @@ class RawData extends Component {
           WSIDs: WSIDs,
           numPages: Math.ceil(result.length / this.PAGE_SIZE)
         });
-
-        this.updatePage(null, { activePage: 1 });
       });
   }
 
@@ -66,68 +63,38 @@ class RawData extends Component {
       });
   }
 
-  updatePage(e, { activePage }) {
-    this.setState({ page: activePage });
-    activePage--;
-
-    console.log(
-      this.state.fData.slice(
-        activePage * this.PAGE_SIZE,
-        (activePage + 1) * this.PAGE_SIZE
-      )
-    );
-    this.setState({
-      pData: this.state.fData.slice(
-        activePage * this.PAGE_SIZE,
-        (activePage + 1) * this.PAGE_SIZE
-      )
-    });
-  }
-
   handleSort(column) {
     if (column !== this.state.column) {
       var data = this.state.fData;
       data.sort((a, b) => a[column] - b[column]);
 
-      this.setState(
-        {
-          fData: data,
-          column: column,
-          ascending: true
-        },
-        () => this.updatePage(null, { activePage: this.state.page })
-      );
+      this.setState({
+        fData: data,
+        column: column,
+        ascending: true
+      });
     } else {
-      this.setState(
-        {
-          fData: this.state.data.reverse(),
-          ascending: !this.state.ascending
-        },
-        () => this.updatePage(null, { activePage: this.state.page })
-      );
+      this.setState({
+        fData: this.state.data.reverse(),
+        ascending: !this.state.ascending
+      });
     }
   }
 
   handleSearch(event, data) {
     if (!data.value.length) {
-      this.setState(
-        {
-          fData: this.state.data,
-          numPages: Math.ceil(this.state.data.length / this.PAGE_SIZE)
-        },
-        () => this.updatePage(null, { activePage: this.state.page })
-      );
+      this.setState({
+        fData: this.state.data,
+        numPages: Math.ceil(this.state.data.length / this.PAGE_SIZE)
+      });
     } else {
       var filteredData = this.state.data.filter(row =>
         data.value.includes(row.WSID)
       );
-      this.setState(
-        {
-          fData: filteredData,
-          numPages: Math.ceil(filteredData.length / this.PAGE_SIZE)
-        },
-        () => this.updatePage(null, { activePage: this.state.page })
-      );
+      this.setState({
+        fData: filteredData,
+        numPages: Math.ceil(filteredData.length / this.PAGE_SIZE)
+      });
     }
   }
 
@@ -135,7 +102,7 @@ class RawData extends Component {
     var getString = ascending => (ascending ? "ascending" : "descending");
 
     return (
-      <div style={{ overflow: "auto" }}>
+      <div style={{ overflow: "auto", height: "100%" }}>
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
@@ -151,43 +118,24 @@ class RawData extends Component {
             onChange={this.handleSearch.bind(this)}
           />
         </div>
-        <Table sortable celled style={{ margin: 0 }}>
-          <Table.Header>
-            <Table.Row>
-              {this.state.pData &&
-                Object.keys(this.state.pData[0]).map((value, id) => (
-                  <Table.HeaderCell
-                    key={id}
-                    sorted={
-                      this.state.column === value
-                        ? getString(this.state.ascending)
-                        : null
-                    }
-                    onClick={() => this.handleSort(value)}
-                  >
-                    {value}
-                  </Table.HeaderCell>
+        <table>
+          <tbody>
+            <tr>
+              {this.state.fData &&
+                Object.keys(this.state.fData[0]).map(value => (
+                  <th onClick={() => this.handleSort(value)}>{value}</th>
                 ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.state.pData &&
-              this.state.pData.map((row, id) => (
-                <Table.Row key={id}>
-                  {Object.values(row).map((value, id) => (
-                    <Table.Cell key={id}>{value}</Table.Cell>
+            </tr>
+            {this.state.fData &&
+              this.state.fData.map(row => (
+                <tr>
+                  {Object.values(row).map(value => (
+                    <td>{value}</td>
                   ))}
-                </Table.Row>
+                </tr>
               ))}
-          </Table.Body>
-        </Table>
-
-        <Pagination
-          defaultActivePage={1}
-          totalPages={this.state.numPages}
-          onPageChange={this.updatePage}
-          style={{ marginTop: 10 }}
-        />
+          </tbody>
+        </table>
       </div>
     );
   }
