@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { Button, Table, Pagination, Sticky, Ref } from "semantic-ui-react";
+import { Button, Table, Pagination } from "semantic-ui-react";
 
 import "./RawData.css";
 
