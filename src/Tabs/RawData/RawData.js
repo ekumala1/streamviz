@@ -1,11 +1,11 @@
-import React, { Component, createRef } from "react";
-import { Button, Table, Pagination, Sticky, Ref } from "semantic-ui-react";
+import React, { Component } from "react";
+import { Button, Table, Pagination, Sticky } from "semantic-ui-react";
 
 import "./RawData.css";
 
 class RawData extends Component {
   PAGE_SIZE = 17;
-  contextRef = createRef();
+  // contextRef = createRef();
 
   constructor(props) {
     super(props);
@@ -102,8 +102,7 @@ class RawData extends Component {
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
-
-        <Table sortable celled style={{ margin: 0 }}>
+        <Table sortable celled>
           <Table.Header>
             <Table.Row>
               {this.state.fData &&
