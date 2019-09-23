@@ -1,16 +1,16 @@
-import React, { Component, createRef } from "react";
-import { Button, Table, Pagination } from "semantic-ui-react";
+import React, { Component } from "react";
+import { Button, Table, Pagination, Dropdown } from "semantic-ui-react";
 
 import "./RawData.css";
 
 class RawData extends Component {
-  PAGE_SIZE = 17;
-  contextRef = createRef();
+  PAGE_SIZE = 16;
 
   constructor(props) {
     super(props);
     // column and direction are for sorting
     this.state = { numPages: 0, page: 1, column: null, direction: true };
+    this.handleSort = this.handleSort.bind(this);
     this.updatePage = this.updatePage.bind(this);
   }
 
@@ -18,8 +18,14 @@ class RawData extends Component {
     fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
+        var WSIDs = result.map(row => row.WSID);
+        WSIDs = [...new Set(WSIDs)];
+        WSIDs = WSIDs.map(id => ({ key: id, text: id, value: id }));
+
         this.setState({
           data: result,
+          fData: result,
+          WSIDs: WSIDs,
           numPages: Math.ceil(result.length / this.PAGE_SIZE)
         });
 
@@ -61,10 +67,17 @@ class RawData extends Component {
   }
 
   updatePage(e, { activePage }) {
+    this.setState({ page: activePage });
     activePage--;
 
+    console.log(
+      this.state.fData.slice(
+        activePage * this.PAGE_SIZE,
+        (activePage + 1) * this.PAGE_SIZE
+      )
+    );
     this.setState({
-      fData: this.state.data.slice(
+      pData: this.state.fData.slice(
         activePage * this.PAGE_SIZE,
         (activePage + 1) * this.PAGE_SIZE
       )
@@ -73,12 +86,12 @@ class RawData extends Component {
 
   handleSort(column) {
     if (column !== this.state.column) {
-      var data = this.state.data;
+      var data = this.state.fData;
       data.sort((a, b) => a[column] - b[column]);
 
       this.setState(
         {
-          data: data,
+          fData: data,
           column: column,
           ascending: true
         },
@@ -87,8 +100,31 @@ class RawData extends Component {
     } else {
       this.setState(
         {
-          data: this.state.data.reverse(),
+          fData: this.state.data.reverse(),
           ascending: !this.state.ascending
+        },
+        () => this.updatePage(null, { activePage: this.state.page })
+      );
+    }
+  }
+
+  handleSearch(event, data) {
+    if (!data.value.length) {
+      this.setState(
+        {
+          fData: this.state.data,
+          numPages: Math.ceil(this.state.data.length / this.PAGE_SIZE)
+        },
+        () => this.updatePage(null, { activePage: this.state.page })
+      );
+    } else {
+      var filteredData = this.state.data.filter(row =>
+        data.value.includes(row.WSID)
+      );
+      this.setState(
+        {
+          fData: filteredData,
+          numPages: Math.ceil(filteredData.length / this.PAGE_SIZE)
         },
         () => this.updatePage(null, { activePage: this.state.page })
       );
@@ -97,18 +133,31 @@ class RawData extends Component {
 
   render() {
     var getString = ascending => (ascending ? "ascending" : "descending");
+
     return (
       <div style={{ overflow: "auto" }}>
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
 
+        <div style={{ marginBottom: "10px" }}>
+          <span style={{ marginRight: "10px" }}>Show:</span>
+          <Dropdown
+            placeholder="WSID"
+            multiple
+            search
+            selection
+            options={this.state.WSIDs}
+            onChange={this.handleSearch.bind(this)}
+          />
+        </div>
         <Table sortable celled style={{ margin: 0 }}>
           <Table.Header>
             <Table.Row>
-              {this.state.fData &&
-                Object.keys(this.state.fData[0]).map(value => (
+              {this.state.pData &&
+                Object.keys(this.state.pData[0]).map((value, id) => (
                   <Table.HeaderCell
+                    key={id}
                     sorted={
                       this.state.column === value
                         ? getString(this.state.ascending)
@@ -122,11 +171,11 @@ class RawData extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.state.fData &&
-              this.state.fData.map(row => (
-                <Table.Row>
-                  {Object.values(row).map(value => (
-                    <Table.Cell>{value}</Table.Cell>
+            {this.state.pData &&
+              this.state.pData.map((row, id) => (
+                <Table.Row key={id}>
+                  {Object.values(row).map((value, id) => (
+                    <Table.Cell key={id}>{value}</Table.Cell>
                   ))}
                 </Table.Row>
               ))}
@@ -137,7 +186,7 @@ class RawData extends Component {
           defaultActivePage={1}
           totalPages={this.state.numPages}
           onPageChange={this.updatePage}
-          style={{ "margin-top": 10 }}
+          style={{ marginTop: 10 }}
         />
       </div>
     );
