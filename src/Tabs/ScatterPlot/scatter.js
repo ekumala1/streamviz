@@ -51,11 +51,18 @@ class scatterPlot {
       .text("");
   }
 
-  updateAxes(params) {
+  updateAxes(params, isLog) {
     // added some filtering code
     this.fData = this.data.filter(
-      d => d[params[0]] != null && d[params[1]] != null
+      d => d[params[0]] != null && d[params[1]] != null && d[params[0]] > 0 && d[params[1]] > 0
     );
+    if (isLog) {
+        this.xScale = d3.scaleSymlog().range([50, this.width - 100]);
+        this.yScale = d3.scaleSymlog().range([this.height - 50, 50]);
+    } else {
+        this.xScale = d3.scaleLinear().range([50, this.width - 100]);
+        this.yScale = d3.scaleLinear().range([this.height - 50, 50]);
+    }
 
     // this.xScale.domain(d3.extent(data, d => +d[params[0]]));
     // this.yScale.domain(d3.extent(data, d => +d[params[1]]));
@@ -68,13 +75,17 @@ class scatterPlot {
 
     // set domain to be extent +- 5%
     this.xScale.domain([
-      xExtent[0] - xRange * 0.02,
+      Math.max(xExtent[0] - xRange * 0.02, 0),
       xExtent[1] + xRange * 0.02
     ]);
     this.yScale.domain([
-      yExtent[0] - yRange * 0.02,
+      Math.max(yExtent[0] - yRange * 0.02, 0),
       yExtent[1] + yRange * 0.02
     ]);
+    // console.log([
+    //     Math.max(yExtent[0] - yRange * 0.02, 0),
+    //     yExtent[1] + yRange * 0.02
+    // ])
 
     this.xSelect
       .transition()
@@ -93,10 +104,11 @@ class scatterPlot {
       .transition()
       .duration(this.duration)
       .text(params[1]);
+
   }
 
-  buildScatter(params) {
-    this.updateAxes(params);
+  buildScatter(params, isLog) {
+    this.updateAxes(params, isLog);
 
     var selection = this.svg.selectAll(".bubble").data(this.fData, d => d);
     var xScale = this.xScale;

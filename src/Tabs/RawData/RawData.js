@@ -106,7 +106,6 @@ class RawData extends Component {
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
-
         <div style={{ marginBottom: "10px" }}>
           <span style={{ marginRight: "10px" }}>Show:</span>
           <Dropdown
