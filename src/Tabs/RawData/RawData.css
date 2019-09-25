@@ -8,9 +8,9 @@ th {
 }
 
 .ascending::after {
-  content: "▲";
+  content: "▴";
 }
 
 .descending::after {
-  content: "▼";
+  content: "▾";
 }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Dropdown } from "semantic-ui-react";
+import InfiniteScroll from "react-infinite-scroller";
 
 import "./RawData.css";
 
