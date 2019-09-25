@@ -57,8 +57,8 @@ class scatterPlot {
       d => d[params[0]] != null && d[params[1]] != null && d[params[0]] > 0 && d[params[1]] > 0
     );
     if (isLog) {
-        this.xScale = d3.scaleLog().range([50, this.width - 100]);
-        this.yScale = d3.scaleLog().range([this.height - 50, 50]);
+        this.xScale = d3.scaleSymlog().range([50, this.width - 100]);
+        this.yScale = d3.scaleSymlog().range([this.height - 50, 50]);
     } else {
         this.xScale = d3.scaleLinear().range([50, this.width - 100]);
         this.yScale = d3.scaleLinear().range([this.height - 50, 50]);
@@ -75,17 +75,17 @@ class scatterPlot {
 
     // set domain to be extent +- 5%
     this.xScale.domain([
-      Math.max(xExtent[0] - xRange * 0.02, 1),
+      Math.max(xExtent[0] - xRange * 0.02, 0),
       xExtent[1] + xRange * 0.02
     ]);
     this.yScale.domain([
-      Math.max(yExtent[0] - yRange * 0.02, 1),
+      Math.max(yExtent[0] - yRange * 0.02, 0),
       yExtent[1] + yRange * 0.02
     ]);
-    console.log([
-        Math.max(yExtent[0] - yRange * 0.02, 0),
-        yExtent[1] + yRange * 0.02
-    ])
+    // console.log([
+    //     Math.max(yExtent[0] - yRange * 0.02, 0),
+    //     yExtent[1] + yRange * 0.02
+    // ])
 
     this.xSelect
       .transition()
