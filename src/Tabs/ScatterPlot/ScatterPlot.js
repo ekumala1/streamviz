@@ -20,11 +20,7 @@ class RawData extends Component {
     fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
-        var variables = Object.keys(result[0]);
-        variables.splice(variables.indexOf("WSID"),1);
-        variables.splice(variables.indexOf("ecoli_method"),1);
-        variables.splice(variables.indexOf("date"),1);
-        this.setState({ keys: variables, data: result, isLog: false });
+        this.setState({ keys: Object.keys(result[0]), data: result });
         this.state.data.forEach(d => (d.date = new Date(d.date)));
         console.log(this.state.data);
 
@@ -37,7 +33,7 @@ class RawData extends Component {
     console.log(this.params);
 
     if (this.params.length === 2) {
-      this.scatter.buildScatter(this.params, this.state.isLog);
+      this.scatter.buildScatter(this.params);
     }
   }
 
@@ -46,13 +42,8 @@ class RawData extends Component {
     console.log(this.params);
 
     if (this.params.length === 2) {
-      this.scatter.buildScatter(this.params, this.state.isLog);
+      this.scatter.buildScatter(this.params);
     }
-  }
-
-  toggleScale() {
-      this.setState({isLog:!this.state.isLog}, () =>
-          this.scatter.buildScatter(this.params, this.state.isLog));
   }
 
   render() {
@@ -85,8 +76,6 @@ class RawData extends Component {
           <svg id="svg" width="1195.5px" height="95%" />
           <br />
           <Checkbox toggle label="Show line of best fit" />
-          <Checkbox toggle label="Toggle scale"
-            onChange={this.toggleScale.bind(this)}/>
         </div>
       </div>
     );
