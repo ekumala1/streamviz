@@ -1,16 +1,14 @@
 import React, { Component } from "react";
-import { Button, Table, Pagination, Sticky } from "semantic-ui-react";
+import { Button, Table, Pagination } from "semantic-ui-react";
 
 import "./RawData.css";
 
 class RawData extends Component {
-  PAGE_SIZE = 17;
-  // contextRef = createRef();
+  PAGE_SIZE = 30;
 
   constructor(props) {
     super(props);
-    // column and direction are for sorting
-    this.state = { numPages: 0, page: 1, column: null, direction: true };
+    this.state = { numPages: 0, page: 1 };
     this.updatePage = this.updatePage.bind(this);
   }
 
@@ -20,7 +18,7 @@ class RawData extends Component {
       .then(result => {
         this.setState({
           data: result,
-          numPages: Math.ceil(result.length / this.PAGE_SIZE)
+          numPages: Math.floor(result.length / this.PAGE_SIZE)
         });
 
         this.updatePage(null, { activePage: 1 });
@@ -71,52 +69,19 @@ class RawData extends Component {
     });
   }
 
-  handleSort(column) {
-    if (column !== this.state.column) {
-      var data = this.state.data;
-      data.sort((a, b) => a[column] - b[column]);
-
-      this.setState(
-        {
-          data: data,
-          column: column,
-          ascending: true
-        },
-        () => this.updatePage(null, { activePage: this.state.page })
-      );
-    } else {
-      this.setState(
-        {
-          data: this.state.data.reverse(),
-          ascending: !this.state.ascending
-        },
-        () => this.updatePage(null, { activePage: this.state.page })
-      );
-    }
-  }
-
   render() {
-    var getString = ascending => (ascending ? "ascending" : "descending");
     return (
-      <div style={{ overflow: "auto" }}>
+      <div>
         <div className="hangRight">
           <Button onClick={this.getFile}>Download</Button>
         </div>
-        <Table sortable celled>
+
+        <Table celled>
           <Table.Header>
             <Table.Row>
               {this.state.fData &&
                 Object.keys(this.state.fData[0]).map(value => (
-                  <Table.HeaderCell
-                    sorted={
-                      this.state.column === value
-                        ? getString(this.state.ascending)
-                        : null
-                    }
-                    onClick={() => this.handleSort(value)}
-                  >
-                    {value}
-                  </Table.HeaderCell>
+                  <Table.HeaderCell>{value}</Table.HeaderCell>
                 ))}
             </Table.Row>
           </Table.Header>
@@ -136,7 +101,6 @@ class RawData extends Component {
           defaultActivePage={1}
           totalPages={this.state.numPages}
           onPageChange={this.updatePage}
-          style={{ "margin-top": 10 }}
         />
       </div>
     );

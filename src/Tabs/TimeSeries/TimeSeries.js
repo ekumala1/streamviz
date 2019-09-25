@@ -19,11 +19,7 @@ class TimeSeries extends Component {
     fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
-        var variables = Object.keys(result[0]);
-        variables.splice(variables.indexOf("WSID"), 1);
-        variables.splice(variables.indexOf("ecoli_method"), 1);
-        variables.splice(variables.indexOf("date"), 1);
-        this.setState({ keys: variables, data: result });
+        this.setState({ keys: Object.keys(result[0]), data: result });
         this.state.data.forEach(
           d => (d.date = d.date == null ? null : new Date(d.date))
         );
@@ -51,9 +47,8 @@ class TimeSeries extends Component {
           <h2>choices</h2>
           <p>Variable:</p>
           <Dropdown
-            placeholder="Variables"
+            placeholder="Variable"
             fluid
-            multiple
             selection
             options={options}
             onChange={this.setParam.bind(this)}
