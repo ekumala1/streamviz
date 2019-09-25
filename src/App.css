@@ -13,6 +13,9 @@
 .ui.item.menu {
   margin: 0;
 }
+.ui.button {
+  margin: 0 !important;
+}
 
 .bubble {
   fill: orange;

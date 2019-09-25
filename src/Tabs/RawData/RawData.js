@@ -106,10 +106,10 @@ class RawData extends Component {
       else return null;
     };
     return (
-      <div style={{ overflow: "auto", height: "100%" }}>
-        <div className="hangRight">
-          <Button onClick={this.getFile}>Download</Button>
-        </div>
+      <div>
+        <Button onClick={this.getFile} className="hangRight">
+          Download
+        </Button>
         <div style={{ marginBottom: "10px" }}>
           <span style={{ marginRight: "10px" }}>Show:</span>
           <Dropdown
