@@ -9,7 +9,7 @@ class RawData extends Component {
   constructor(props) {
     super(props);
     // column and direction are for sorting
-    this.state = { numPages: 0, page: 1, column: null, direction: true };
+    this.state = { numPages: 0, page: 1, column: null };
     this.handleSort = this.handleSort.bind(this);
   }
 
@@ -99,6 +99,11 @@ class RawData extends Component {
   }
 
   render() {
+    var getClass = column => {
+      if (column === this.state.column)
+        return this.state.ascending ? "ascending" : "descending";
+      else return null;
+    };
     return (
       <div style={{ overflow: "auto", height: "100%" }}>
         <div className="hangRight">
@@ -120,7 +125,12 @@ class RawData extends Component {
             <tr>
               {this.state.fData &&
                 Object.keys(this.state.fData[0]).map(value => (
-                  <th onClick={() => this.handleSort(value)}>{value}</th>
+                  <th
+                    className={getClass(value)}
+                    onClick={() => this.handleSort(value)}
+                  >
+                    {value}
+                  </th>
                 ))}
             </tr>
             {this.state.fData &&
