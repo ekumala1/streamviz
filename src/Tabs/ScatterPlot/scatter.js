@@ -1,9 +1,9 @@
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 class scatterPlot {
   constructor() {
-    this.svg = d3.select('#svg');
-    var svgElement = document.getElementById('svg');
+    this.svg = d3.select("#svg");
+    var svgElement = document.getElementById("svg");
 
     this.width = svgElement.getBoundingClientRect().width;
     this.height = svgElement.getBoundingClientRect().height;
@@ -12,7 +12,7 @@ class scatterPlot {
   }
 
   clear() {
-    this.svg.html('');
+    this.svg.html("");
   }
 
   buildAxes() {
@@ -27,28 +27,28 @@ class scatterPlot {
       .range([this.height - 50, 50]);
 
     this.xSelect = this.svg
-      .append('g')
-      .attr('transform', `translate(0, ${this.height - 50})`)
+      .append("g")
+      .attr("transform", `translate(0, ${this.height - 50})`)
       .call(d3.axisBottom().scale(this.xScale));
     this.ySelect = this.svg
-      .append('g')
-      .attr('transform', 'translate(50, 0)')
+      .append("g")
+      .attr("transform", "translate(50, 0)")
       .call(d3.axisLeft().scale(this.yScale));
 
     this.axisHorizontal = this.svg
-      .append('text')
-      .attr('transform', `translate(${this.width / 2}, ${this.height - 10})`)
-      .style('text-anchor', 'middle')
-      .text('');
+      .append("text")
+      .attr("transform", `translate(${this.width / 2}, ${this.height - 10})`)
+      .style("text-anchor", "middle")
+      .text("");
 
     this.axisVertical = this.svg
-      .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0)
-      .attr('x', 0 - this.height / 2)
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .text('');
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("x", 0 - this.height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("");
   }
 
   updateAxes(params, isLog) {
@@ -110,28 +110,49 @@ class scatterPlot {
   buildScatter(params, isLog) {
     this.updateAxes(params, isLog);
 
-    var selection = this.svg.selectAll('.bubble').data(this.fData, d => d);
+    var selection = this.svg.selectAll(".bubble").data(this.fData, d => d);
+    var xScale = this.xScale;
+    var yScale = this.yScale;
+    var group = this.svg.append("g").attr("class", "tooltips");
 
     selection
       .exit()
       .transition()
       .duration(this.duration)
-      .attr('r', 0)
+      .attr("r", 0)
       .remove();
 
     var enter = selection
       .enter()
-      .append('circle')
-      .attr('class', 'bubble')
-      .attr('r', 0)
-      .attr('cx', d => this.xScale(+d[params[0]]))
-      .attr('cy', d => this.yScale(+d[params[1]]))
-      .style('opacity', 0.5);
+      .append("circle")
+      .attr("class", "bubble")
+      .attr("r", 0)
+      .attr("cx", d => xScale(+d[params[0]]))
+      .attr("cy", d => yScale(+d[params[1]]))
+      .style("opacity", 0.5)
+      .on("mouseover", handleMouseOver)
+      .on("mouseout", handleMouseOut);
+
+    function handleMouseOver(d, i) {
+      console.log("hi");
+
+      // d3.select(this).attr("r", 10);
+      group
+        .append("text")
+        .attr("id", "t" + i)
+        .attr("class", d => console.log(d))
+        .attr("x", xScale(+d[params[0]]) + 10)
+        .attr("y", yScale(+d[params[1]]) - 10)
+        .text(d.WSID);
+    }
+    function handleMouseOut(d, i) {
+      group.select("#t" + i).remove();
+    }
 
     enter
       .transition()
       .duration(this.duration)
-      .attr('r', 3);
+      .attr("r", 3);
   }
 }
 

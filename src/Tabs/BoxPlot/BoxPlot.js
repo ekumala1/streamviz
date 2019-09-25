@@ -47,7 +47,6 @@ class RawData extends Component {
           <Dropdown
             placeholder="Variable"
             fluid
-            multiple
             selection
             options={options}
             onChange={this.setParam.bind(this)}
