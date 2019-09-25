@@ -99,8 +99,6 @@ class RawData extends Component {
   }
 
   render() {
-    var getString = ascending => (ascending ? "ascending" : "descending");
-
     return (
       <div style={{ overflow: "auto", height: "100%" }}>
         <div className="hangRight">
