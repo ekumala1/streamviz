@@ -48,22 +48,16 @@ class boxPlot {
       .text("Amount");
   }
 
-  updateAxes(params) {
+  updateAxes(param) {
+    //TODO: remove array stuff and make it work for 1 var
     // added some filtering code
-    this.fData = this.data.filter(d => {
-      for (var i in params) if (d[params[i]] == null) return false;
+    this.fData = this.data.filter(d => d[param] != null);
 
-      return true;
-    });
-
-    var temp = [];
-    var getParam = d => +d[params[i]];
-    for (var i in params) temp = temp.concat(this.fData.map(getParam));
-
-    var yExtent = d3.extent(temp),
+    var yExtent = d3.extent(this.fData, d => +d[param]),
       yRange = yExtent[1] - yExtent[0];
 
-    this.xScale.domain(params);
+    var temp = [param];
+    this.xScale.domain(temp);
     this.yScale.domain([
       yExtent[0] - yRange * 0.02,
       yExtent[1] + yRange * 0.02
@@ -79,9 +73,9 @@ class boxPlot {
       .call(d3.axisLeft().scale(this.yScale));
   }
 
-  buildBox(params) {
+  buildBox(param) {
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
-    this.updateAxes(params);
+    this.updateAxes(param);
     this.svg
       .selectAll(".boxplot")
       .transition()
@@ -93,47 +87,45 @@ class boxPlot {
     // make proportional whisker/box widths
     whiskerWidth = this.xScale.bandwidth() * 0.3;
     boxWidth = this.xScale.bandwidth() * 0.4;
-
-    var getParam = d => +d[params[i]];
+    var getParam = d => +d[param];
     var getQuantile = d => d3.quantile(array, d);
     // for every selected column
-    for (var i in params) {
-      // create a group for easy manipulation
-      var g = this.svg
-        .append("g")
-        .attr("class", "boxplot")
-        .attr(
-          "transform",
-          `translate(${this.xScale(params[i]) +
-            this.xScale.bandwidth() / 2 -
-            boxWidth / 2}, 0)`
-        )
-        .style("stroke-opacity", 0);
+    //for (var i in params) {
+    // create a group for easy manipulation
+    var g = this.svg
+      .append("g")
+      .attr("class", "boxplot")
+      .attr(
+        "transform",
+        `translate(${this.xScale(param) +
+          this.xScale.bandwidth() / 2 -
+          boxWidth / 2}, 0)`
+      )
+      .style("stroke-opacity", 0);
 
-      // 1d dataset of current column
-      var array = this.fData.map(getParam);
-      array = array.sort((a, b) => a - b);
+    // 1d dataset of current column
+    var array = this.fData.map(getParam);
+    array = array.sort((a, b) => a - b);
 
-      // find quantiles
-      var q = [0, 0.25, 0.5, 0.75, 1];
-      q = q.map(getQuantile);
+    // find quantiles
+    var q = [0, 0.25, 0.5, 0.75, 1];
+    q = q.map(getQuantile);
 
-      // find outliers
-      var iqr = q[3] - q[1];
-      var outliers = array.filter(
-        d => d < q[1] - 1.5 * iqr || d > q[3] + 1.5 * iqr
-      );
-      // remove outliers
-      array = array.filter(d => !outliers.includes(d));
+    // find outliers
+    var iqr = q[3] - q[1];
+    var outliers = array.filter(
+      d => d < q[1] - 1.5 * iqr || d > q[3] + 1.5 * iqr
+    );
+    // remove outliers
+    array = array.filter(d => !outliers.includes(d));
 
-      this.drawWhiskers(g, Math.min(...array), Math.max(...array));
-      this.drawBox(g, q);
-      this.drawOutliers(g, outliers);
+    this.drawWhiskers(g, Math.min(...array), Math.max(...array));
+    this.drawBox(g, q);
+    this.drawOutliers(g, outliers);
 
-      g.transition()
-        .duration(this.duration)
-        .style("stroke-opacity", 1);
-    }
+    g.transition()
+      .duration(this.duration)
+      .style("stroke-opacity", 1);
   }
 
   // start of box plotting functions
