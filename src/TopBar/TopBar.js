@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 class TopBar extends Component {
   render() {
     return (
-      <Menu widths={3}>
+      <Menu widths={5}>
         <Menu.Item as={NavLink} to="/box" activeClassName="active">
           Box Plot
         </Menu.Item>
@@ -14,6 +14,12 @@ class TopBar extends Component {
         </Menu.Item>
         <Menu.Item as={NavLink} to="/time" activeClassName="active">
           Time Series Graph
+        </Menu.Item>
+        <Menu.Item as={NavLink} to="/raw" activeClassName="active">
+          View Raw Data
+        </Menu.Item>
+        <Menu.Item as={NavLink} to="/login" activeClassName="active">
+          Login
         </Menu.Item>
       </Menu>
     );

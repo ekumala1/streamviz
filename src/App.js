@@ -27,7 +27,6 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <Route path="/raw" component={RawData} />
           </div>
-          <BottomBar />
         </div>
       </Router>
     );

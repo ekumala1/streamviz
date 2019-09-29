@@ -105,44 +105,50 @@ class RawData extends Component {
       else return null;
     };
     return (
-      <div style={{ overflow: "auto", height: "100%" }}>
-        <div className="hangRight">
-          <Button onClick={this.getFile}>Download</Button>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <span style={{ marginRight: "10px" }}>Show:</span>
-          <Dropdown
-            placeholder="WSID"
-            multiple
-            search
-            selection
-            options={this.state.WSIDs}
-            onChange={this.handleSearch.bind(this)}
-          />
-        </div>
-        <table>
-          <tbody>
-            <tr>
+      <div style={{ overflow: "auto", height: "100%" }} className="wholeTable">
+        <div className="tableContent">
+          <div className="hangRight">
+            <div className="topTableOpts">
+              <span style={{ marginRight: "10px" }} id="showLabel">Show:</span>
+              <Dropdown
+                placeholder="WSID"
+                multiple
+                search
+                selection
+                options={this.state.WSIDs}
+                onChange={this.handleSearch.bind(this)}
+              />
+            </div>
+            <Button onClick={this.getFile} id="downloadBtn">Download</Button>
+          </div>
+
+          <table>
+            <tbody>
+              <tr className="headerRow">
+                <th>WSID</th>
+                <th>Visual Score</th>
+                <th>Biological Score</th>
+                <th>Conductivity</th>
+                <th>Turbidity</th>
+                <th>Phosphate</th>
+                <th>Nitrate</th>
+                <th>pH</th>
+                <th>Temperature</th>
+                <th>Ecoli</th>
+                <th>Ecoli Method</th>
+                <th>Date</th>
+              </tr>
               {this.state.fData &&
-                Object.keys(this.state.fData[0]).map(value => (
-                  <th
-                    className={getClass(value)}
-                    onClick={() => this.handleSort(value)}
-                  >
-                    {value}
-                  </th>
+                this.state.fData.map(row => (
+                  <tr>
+                    {Object.values(row).map(value => (
+                      <td>{value}</td>
+                    ))}
+                  </tr>
                 ))}
-            </tr>
-            {this.state.fData &&
-              this.state.fData.map(row => (
-                <tr>
-                  {Object.values(row).map(value => (
-                    <td>{value}</td>
-                  ))}
-                </tr>
-              ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
