@@ -109,7 +109,9 @@ class RawData extends Component {
         <div className="tableContent">
           <div className="hangRight">
             <div className="topTableOpts">
-              <span style={{ marginRight: "10px" }} id="showLabel">Show:</span>
+              <span style={{ marginRight: "10px" }} id="showLabel">
+                Show:
+              </span>
               <Dropdown
                 placeholder="WSID"
                 multiple
@@ -119,24 +121,23 @@ class RawData extends Component {
                 onChange={this.handleSearch.bind(this)}
               />
             </div>
-            <Button onClick={this.getFile} id="downloadBtn">Download</Button>
+            <Button onClick={this.getFile} id="downloadBtn">
+              Download
+            </Button>
           </div>
 
           <table>
             <tbody>
               <tr className="headerRow">
-                <th>WSID</th>
-                <th>Visual Score</th>
-                <th>Biological Score</th>
-                <th>Conductivity</th>
-                <th>Turbidity</th>
-                <th>Phosphate</th>
-                <th>Nitrate</th>
-                <th>pH</th>
-                <th>Temperature</th>
-                <th>Ecoli</th>
-                <th>Ecoli Method</th>
-                <th>Date</th>
+                {this.state.fData &&
+                  Object.keys(this.state.fData[0]).map(value => (
+                    <th
+                      className={getClass(value)}
+                      onClick={() => this.handleSort(value)}
+                    >
+                      {value}
+                    </th>
+                  ))}
               </tr>
               {this.state.fData &&
                 this.state.fData.map(row => (

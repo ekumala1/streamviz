@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 import TopBar from "./TopBar/TopBar";
-import BottomBar from "./BottomBar/BottomBar";
+// import BottomBar from "./BottomBar/BottomBar";
 import BoxPlot from "./Tabs/BoxPlot/BoxPlot";
 import ScatterPlot from "./Tabs/ScatterPlot/ScatterPlot";
 import TimeSeries from "./Tabs/TimeSeries/TimeSeries";
