@@ -1,0 +1,15 @@
+.loginBar {
+	margin: 0;
+	font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.barItem {
+	text-align: center;
+	padding: 15px;
+	margin: auto;
+	height: 100%;
+	border: solid 1px grey;
+}

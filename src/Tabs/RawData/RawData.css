@@ -1,4 +1,102 @@
+.tableContent {
+  width: 90%;
+  margin: auto;
+  box-shadow: 0 0 10px 3px #cdcdcd;
+  border-radius: 5px;
+  margin-bottom: 40px;
+}
+
 .hangRight {
-  position: absolute;
-  right: 20px;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  margin-top: 40px;
+  background-color: #eee;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 30px;
+  border-radius: 5px 5px 0 0;
+  z-index: 2;
+  border-bottom: solid 2px #ddd;
+}
+
+#showLabel {
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: bold;
+}
+
+#downloadBtn {
+  background-color: rgb(180, 207, 236);
+  color: rgb(0, 0, 0, 0.87);
+}
+
+#downloadBtn:hover {
+  background-color: #9fc2e9;
+  color: rgb(0, 0, 0);
+}
+
+.wholeTable {
+  background-color: rgb(245, 250, 255);
+}
+
+table {
+  margin: auto;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  padding-bottom: 20px;
+  border-radius: 0 0 5px 5px;
+}
+
+tr {
+  background-color: #fff;
+}
+
+tr:first-child {
+  transform: scale(1);
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  box-shadow: 0 6px 5px -1px #ddd;
+  -webkit-box-shadow: 0 6px 5px -1px #ddd;
+  -moz-box-shadow: 0 6px 5px -1px #ddd;
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(250, 252, 255);
+}
+
+tr:last-child {
+  border-radius: 0 0 5px 5px;
+}
+
+th {
+  cursor: pointer;
+  padding: 15px 10px 15px 15px;
+  background-color: #eee;
+  text-align: center;
+  position: sticky;
+  top: 78px;
+  /*box-shadow: 0 4px 4px -4px #ddd;*/
+}
+
+.isScrolled {
+  background-color: #ddd;
+}
+
+th:hover {
+  background-color: #ccc;
+}
+
+td {
+  padding: 10px 10px 10px 15px;
+  text-align: center;
+}
+
+.ascending::after {
+  content: " ▴";
+}
+
+.descending::after {
+  content: " ▾";
 }

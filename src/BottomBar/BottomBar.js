@@ -1,23 +1,25 @@
-import React, { Component } from 'react';
-import { Menu } from 'semantic-ui-react';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
+
+import "./BottomBar.css";
 
 class BottomBar extends Component {
   render() {
     return (
-      <Menu>
-        <Menu.Item as={NavLink} to="/login" activeClassName="active">
+      <div class="loginBar">
+        <div as={NavLink} to="/login" activeClassName="active" class="barItem">
           Login
-        </Menu.Item>
-        <Menu.Item
+        </div>
+        <div
           as={NavLink}
           to="/raw"
           position="right"
           activeClassName="active"
+          class="barItem"
         >
           View Raw Data
-        </Menu.Item>
-      </Menu>
+        </div>
+      </div>
     );
   }
 }
