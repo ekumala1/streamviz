@@ -18,11 +18,7 @@ class RawData extends Component {
     fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
-        var variables = Object.keys(result[0]);
-        variables.splice(variables.indexOf("WSID"), 1);
-        variables.splice(variables.indexOf("ecoli_method"), 1);
-        variables.splice(variables.indexOf("date"), 1);
-        this.setState({ keys: variables, data: result });
+        this.setState({ keys: Object.keys(result[0]), data: result });
         this.state.data.forEach(d => (d.date = new Date(d.date)));
         console.log(this.state.data);
 
@@ -42,10 +38,10 @@ class RawData extends Component {
     return (
       <div className="container">
         <div className="sidebar">
-          <h2>choices</h2>
+          <h2>Choose Data</h2>
           <p>Variable:</p>
           <Dropdown
-            placeholder="Variable"
+            placeholder="Variables"
             fluid
             selection
             options={options}
