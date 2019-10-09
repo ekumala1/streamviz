@@ -13,3 +13,7 @@ label {
 .ui.primary.button {
   cursor: default;
 }
+
+input {
+  margin: 10px;
+}

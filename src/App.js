@@ -7,7 +7,7 @@ import BoxPlot from "./Tabs/BoxPlot/BoxPlot";
 import ScatterPlot from "./Tabs/ScatterPlot/ScatterPlot";
 import TimeSeries from "./Tabs/TimeSeries/TimeSeries";
 import RawData from "./Tabs/RawData/RawData";
-import Login from "./Tabs/Login/Login";
+import Upload from "./Tabs/Upload/Upload";
 
 import "./App.css";
 
@@ -24,7 +24,7 @@ class App extends Component {
             <Route path="/box" component={BoxPlot} />
             <Route path="/scatter" component={ScatterPlot} />
             <Route path="/time" component={TimeSeries} />
-            <Route path="/login" component={Login} />
+            <Route path="/upload" component={Upload} />
             <Route path="/raw" component={RawData} />
           </div>
         </div>

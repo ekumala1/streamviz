@@ -9,7 +9,7 @@ class RawData extends Component {
   constructor(props) {
     super(props);
     // column and direction are for sorting
-    this.state = { numPages: 0, page: 1, column: null };
+    this.state = { numPages: 0, page: 1, WSIDs: [], column: null };
     this.handleSort = this.handleSort.bind(this);
   }
 
