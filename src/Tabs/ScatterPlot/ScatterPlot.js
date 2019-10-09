@@ -54,7 +54,7 @@ class RawData extends Component {
     return (
       <div className="container">
         <div className="sidebar">
-          <h2>choices</h2>
+          <h2>Choose Data</h2>
           <p>Variable 1:</p>
           <Dropdown
             placeholder="Variable"

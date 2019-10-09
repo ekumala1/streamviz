@@ -44,7 +44,7 @@ class TimeSeries extends Component {
     return (
       <div className="container">
         <div className="sidebar">
-          <h2>choices</h2>
+          <h2>Choose Data</h2>
           <p>Variable:</p>
           <Dropdown
             placeholder="Variable"
