@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./BoxPlot.css";
 
 import boxPlot from "./box";
-import { Dropdown } from "semantic-ui-react";
+import { Dropdown, Checkbox } from "semantic-ui-react";
 
 class RawData extends Component {
   constructor() {
