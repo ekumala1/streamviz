@@ -41,7 +41,7 @@ class RawData extends Component {
           <h2>Choose Data</h2>
           <p>Variable:</p>
           <Dropdown
-            placeholder="Variables"
+            placeholder="Variable"
             fluid
             selection
             options={options}
