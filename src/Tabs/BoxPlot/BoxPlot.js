@@ -55,6 +55,11 @@ class RawData extends Component {
         <div className="content">
           <svg id="svg" width="1195.5px" height="100%" />
         </div>
+        <div className="content">
+          <svg id="svg" width="1195.5px" height="95%" />
+          <br />
+          <Checkbox toggle label="Include Outliers" />
+        </div>
       </div>
     );
   }
