@@ -7,7 +7,7 @@ import { Dropdown, Checkbox } from "semantic-ui-react";
 class RawData extends Component {
   constructor() {
     super();
-    this.state = { keys: [], data: [] };
+    this.state = { keys: [], data: [], outliers: false };
   }
 
   componentDidMount() {
@@ -24,6 +24,7 @@ class RawData extends Component {
         variables.splice(variables.indexOf("date"), 1);
         this.setState({ keys: variables, data: result });
         this.state.data.forEach(d => (d.date = new Date(d.date)));
+        this.setState({ outliers: false });
         console.log(this.state.data);
 
         this.box.data = this.state.data;
@@ -31,7 +32,13 @@ class RawData extends Component {
   }
 
   setParam(event, data) {
-    this.box.buildBox(data.value);
+    this.box.buildBox(data.value, this.state.outliers);
+  }
+  setOutliers(event, data) {
+    this.setState({ outliers: !this.state.outliers }, () => {
+      console.log(this.state.outliers);
+      this.box.buildBox(data.value, this.state.outliers);
+    });
   }
 
   render() {
@@ -53,12 +60,13 @@ class RawData extends Component {
           />
         </div>
         <div className="content">
-          <svg id="svg" width="1195.5px" height="100%" />
-        </div>
-        <div className="content">
           <svg id="svg" width="1195.5px" height="95%" />
           <br />
-          <Checkbox toggle label="Include Outliers" />
+          <Checkbox
+            toggle
+            label="Display Outliers"
+            onChange={this.setOutliers.bind(this)}
+          />
         </div>
       </div>
     );

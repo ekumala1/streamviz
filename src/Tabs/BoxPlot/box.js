@@ -49,7 +49,6 @@ class boxPlot {
   }
 
   updateAxes(param) {
-    //TODO: remove array stuff and make it work for 1 var
     // added some filtering code
     this.fData = this.data.filter(d => d[param] != null);
 
@@ -73,7 +72,7 @@ class boxPlot {
       .call(d3.axisLeft().scale(this.yScale));
   }
 
-  buildBox(param) {
+  buildBox(param, outliers) {
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
     this.updateAxes(param);
     this.svg
@@ -106,23 +105,30 @@ class boxPlot {
     // 1d dataset of current column
     var array = this.fData.map(getParam);
     array = array.sort((a, b) => a - b);
-
+    console.log(this.fData);
+    console.log(array);
     // find quantiles
     var q = [0, 0.25, 0.5, 0.75, 1];
     q = q.map(getQuantile);
-
-    // find outliers
     var iqr = q[3] - q[1];
-    var outliers = array.filter(
-      d => d < q[1] - 1.5 * iqr || d > q[3] + 1.5 * iqr
-    );
-    // remove outliers
-    array = array.filter(d => !outliers.includes(d));
+    console.log(q);
+    if (outliers) {
+      //Note: Outliers is the parameter, outlier is the actual list of points that will be plotted
+      // find outliers
+
+      var outlier = array.filter(
+        d => d < q[1] - 1.5 * iqr || d > q[3] + 1.5 * iqr
+      );
+
+      // remove outliers
+      array = array.filter(d => !outlier.includes(d));
+    }
 
     this.drawWhiskers(g, Math.min(...array), Math.max(...array));
     this.drawBox(g, q);
-    this.drawOutliers(g, outliers);
-
+    if (outliers) {
+      this.drawOutliers(g, outlier);
+    }
     g.transition()
       .duration(this.duration)
       .style("stroke-opacity", 1);
