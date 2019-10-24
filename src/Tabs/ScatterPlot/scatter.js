@@ -110,37 +110,17 @@ class scatterPlot {
   buildScatter(params, isLog) {
     this.updateAxes(params, isLog);
 
-    var selection = this.svg.selectAll(".bubble").data(this.fData, d => d);
+    var selection = this.svg.selectAll(".bubble").data(this.fData);
+    var group = this.svg.append("g").attr("class", "tooltips");
     var xScale = this.xScale;
     var yScale = this.yScale;
-    var group = this.svg.append("g").attr("class", "tooltips");
-
-    selection
-      .exit()
-      .transition()
-      .duration(this.duration)
-      .attr("r", 0)
-      .remove();
-
-    var enter = selection
-      .enter()
-      .append("circle")
-      .attr("class", "bubble")
-      .attr("r", 0)
-      .attr("cx", d => xScale(+d[params[0]]))
-      .attr("cy", d => yScale(+d[params[1]]))
-      .style("opacity", 0.5)
-      .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut);
 
     function handleMouseOver(d, i) {
-      console.log("hi");
-
       // d3.select(this).attr("r", 10);
       group
         .append("text")
         .attr("id", "t" + i)
-        .attr("class", d => console.log(d))
+        .attr("class", "tooltip")
         .attr("x", xScale(+d[params[0]]) + 10)
         .attr("y", yScale(+d[params[1]]) - 10)
         .text(d.WSID);
@@ -149,10 +129,31 @@ class scatterPlot {
       group.select("#t" + i).remove();
     }
 
-    enter
+    // enter
+    selection
+      .enter()
+      .append("circle")
+      .attr("class", "bubble")
+      .attr("r", 0)
+      .style("opacity", 0.5)
+      .on("mouseover", handleMouseOver)
+      .on("mouseout", handleMouseOut)
+
+      // update
+      .merge(selection)
       .transition()
       .duration(this.duration)
-      .attr("r", 3);
+      .attr("r", 3)
+      .attr("cx", d => xScale(+d[params[0]]))
+      .attr("cy", d => yScale(+d[params[1]]));
+
+    // exit
+    selection
+      .exit()
+      .transition()
+      .duration(this.duration)
+      .style("opacity", 0)
+      .remove();
   }
 }
 
