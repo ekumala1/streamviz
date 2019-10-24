@@ -32,12 +32,12 @@ class RawData extends Component {
   }
 
   setParam(event, data) {
-    this.box.buildBox(data.value, this.state.outliers);
+    this.box.updateAxes(data.value);
+    this.box.buildBox(this.state.outliers);
   }
-  setOutliers(event, data) {
+  setOutliers() {
     this.setState({ outliers: !this.state.outliers }, () => {
-      console.log(this.state.outliers);
-      this.box.buildBox(data.value, this.state.outliers);
+      this.box.buildBox(this.state.outliers);
     });
   }
 
