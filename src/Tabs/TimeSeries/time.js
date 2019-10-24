@@ -11,6 +11,7 @@ class timePlot {
     this.width = svgElement.getBoundingClientRect().width;
     this.height = svgElement.getBoundingClientRect().height;
 
+    this.WSIDs = [];
     this.duration = 1000;
   }
 
@@ -78,7 +79,13 @@ class timePlot {
 
   filterData(params) {
     this.axisVertical.text(params[0]);
-    this.fData = this.data.filter(d => d[params[0]] != null && d.date != null);
+    var no_wsids = this.WSIDs.length === 0;
+    this.fData = this.data.filter(
+      d =>
+        d[params[0]] != null &&
+        d.date != null &&
+        (no_wsids || this.WSIDs.includes(d.WSID))
+    );
 
     // get average entry by date
     this.fData = d3
@@ -102,28 +109,30 @@ class timePlot {
   }
 
   buildScatter() {
-    var selection = this.svg.selectAll(".bubble").data(this.fData, d => d);
+    var selection = this.svg.selectAll(".bubble").data(this.fData);
 
     selection
-      .exit()
-      .transition()
-      .duration(this.duration)
-      .attr("r", 0)
-      .remove();
-
-    var enter = selection
       .enter()
       .append("circle")
       .attr("class", "bubble")
       .attr("r", 0)
-      .attr("cx", d => this.xScale(d.key))
-      .attr("cy", d => this.yScale(d.value))
-      .style("opacity", 1);
+      .style("opacity", 1)
 
-    enter
+      // update
+      .merge(selection)
       .transition()
       .duration(this.duration)
-      .attr("r", 3);
+      .attr("r", 3)
+      .attr("cx", d => this.xScale(d.key))
+      .attr("cy", d => this.yScale(d.value));
+
+    // exit
+    selection
+      .exit()
+      .transition()
+      .duration(this.duration)
+      .style("opacity", 0)
+      .remove();
   }
 
   // courtesy of https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89

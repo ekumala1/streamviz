@@ -11,6 +11,7 @@ class RawData extends Component {
     // column and direction are for sorting
     this.state = { numPages: 0, page: 1, column: null };
     this.handleSort = this.handleSort.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
@@ -83,18 +84,12 @@ class RawData extends Component {
 
   handleSearch(event, data) {
     if (!data.value.length) {
-      this.setState({
-        fData: this.state.data,
-        numPages: Math.ceil(this.state.data.length / this.PAGE_SIZE)
-      });
+      this.setState({ fData: this.state.data });
     } else {
       var filteredData = this.state.data.filter(row =>
         data.value.includes(row.WSID)
       );
-      this.setState({
-        fData: filteredData,
-        numPages: Math.ceil(filteredData.length / this.PAGE_SIZE)
-      });
+      this.setState({ fData: filteredData });
     }
   }
 

@@ -8,6 +8,9 @@ class RawData extends Component {
   constructor() {
     super();
     this.state = { keys: [], data: [], outliers: false };
+
+    this.setParam = this.setParam.bind(this);
+    this.setOutliers = this.setOutliers.bind(this);
   }
 
   componentDidMount() {
@@ -56,7 +59,7 @@ class RawData extends Component {
             fluid
             selection
             options={options}
-            onChange={this.setParam.bind(this)}
+            onChange={this.setParam}
           />
         </div>
         <div className="content">
@@ -65,7 +68,7 @@ class RawData extends Component {
           <Checkbox
             toggle
             label="Display Outliers"
-            onChange={this.setOutliers.bind(this)}
+            onChange={this.setOutliers}
           />
         </div>
       </div>

@@ -10,6 +10,9 @@ class TimeSeries extends Component {
   constructor() {
     super();
     this.state = { keys: [], data: [] };
+
+    this.setParam = this.setParam.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
@@ -23,12 +26,17 @@ class TimeSeries extends Component {
         variables.splice(variables.indexOf("WSID"), 1);
         variables.splice(variables.indexOf("ecoli_method"), 1);
         variables.splice(variables.indexOf("date"), 1);
-        this.setState({ keys: variables, data: result });
-        this.state.data.forEach(
+
+        var WSIDs = result.map(row => row.WSID);
+        WSIDs = [...new Set(WSIDs)];
+        WSIDs = WSIDs.map(id => ({ key: id, text: id, value: id }));
+
+        this.setState({ keys: variables, WSIDs: WSIDs });
+
+        result.forEach(
           d => (d.date = d.date == null ? null : new Date(d.date))
         );
-
-        this.time.data = this.state.data;
+        this.time.data = result;
         this.time.buildAxes();
       });
   }
@@ -37,6 +45,11 @@ class TimeSeries extends Component {
     this.params[0] = data.value;
     console.log(this.params);
 
+    this.time.buildLinePlot(this.params);
+  }
+
+  handleSearch(event, data) {
+    this.time.WSIDs = data.value;
     this.time.buildLinePlot(this.params);
   }
 
@@ -55,7 +68,16 @@ class TimeSeries extends Component {
             fluid
             selection
             options={options}
-            onChange={this.setParam.bind(this)}
+            onChange={this.setParam}
+          />
+          <p>Filter by site:</p>
+          <Dropdown
+            placeholder="WSID"
+            multiple
+            search
+            selection
+            options={this.state.WSIDs}
+            onChange={this.handleSearch}
           />
         </div>
         <div className="content">

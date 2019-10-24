@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
-import { Form, Message } from 'semantic-ui-react';
+import React, { Component } from "react";
+import { Form, Message } from "semantic-ui-react";
 
-import './Login.css';
+import "./Login.css";
 
 class Login extends Component {
+  constructor() {
+    super();
+
+    this.login = this.login.bind(this);
+  }
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   login() {
@@ -17,7 +22,7 @@ class Login extends Component {
       <div className="container">
         <div className="card">
           <h1>Login</h1>
-          <Form onSubmit={this.login.bind(this)}>
+          <Form onSubmit={this.login}>
             <Form.Input
               fluid
               name="username"
