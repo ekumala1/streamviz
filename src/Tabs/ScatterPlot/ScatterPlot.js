@@ -10,6 +10,8 @@ class RawData extends Component {
   constructor() {
     super();
     this.state = { keys: [], data: [] };
+
+    this.setParam = this.setParam.bind(this);
   }
 
   componentDidMount() {
@@ -24,26 +26,22 @@ class RawData extends Component {
         variables.splice(variables.indexOf("WSID"), 1);
         variables.splice(variables.indexOf("ecoli_method"), 1);
         variables.splice(variables.indexOf("date"), 1);
-        this.setState({ keys: variables, data: result });
-        this.state.data.forEach(d => (d.date = new Date(d.date)));
-        console.log(this.state.data);
 
-        this.scatter.data = this.state.data;
+        this.setState({ keys: variables });
+
+        var WSIDs = result.map(row => row.WSID);
+        WSIDs = [...new Set(WSIDs)];
+        WSIDs = WSIDs.map(id => ({ key: id, text: id, value: id }));
+
+        result.forEach(
+          d => (d.date = d.date == null ? null : new Date(d.date))
+        );
+        this.scatter.data = result;
       });
   }
 
-  setParam1(event, data) {
-    this.params[0] = data.value;
-    console.log(this.params);
-
-    if (this.params.length === 2) {
-      this.scatter.buildScatter(this.params, this.state.isLog);
-    }
-  }
-
-  setParam2(event, data) {
-    this.params[1] = data.value;
-    console.log(this.params);
+  setParam(i, data) {
+    this.params[i] = data;
 
     if (this.params.length === 2) {
       this.scatter.buildScatter(this.params, this.state.isLog);
@@ -71,7 +69,7 @@ class RawData extends Component {
             fluid
             selection
             options={options}
-            onChange={this.setParam1.bind(this)}
+            onChange={(_, data) => this.setParam(0, data.value)}
           />
           <p>Variable 2:</p>
           <Dropdown
@@ -79,7 +77,7 @@ class RawData extends Component {
             fluid
             selection
             options={options}
-            onChange={this.setParam2.bind(this)}
+            onChange={(_, data) => this.setParam(1, data.value)}
           />
         </div>
         <div className="content">
