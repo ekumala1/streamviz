@@ -3,6 +3,7 @@ import "./TimeSeries.css";
 
 import timePlot from "./time";
 import { Dropdown } from "semantic-ui-react";
+import { DateRangePicker } from "react-dates";
 
 class TimeSeries extends Component {
   params = [];
@@ -53,6 +54,10 @@ class TimeSeries extends Component {
     this.time.buildLinePlot(this.params);
   }
 
+  // if id is 0, start date
+  // if ~~~~~ 1, end date
+  handleRange(id, data) {}
+
   render() {
     var options = this.state.keys.map(key => {
       return { key: key, text: key, value: key };
@@ -78,6 +83,18 @@ class TimeSeries extends Component {
             selection
             options={this.state.WSIDs}
             onChange={this.handleSearch}
+          />
+          <p>Date range:</p>
+          <DateRangePicker
+            startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+            startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+            endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+            endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+            onDatesChange={({ startDate, endDate }) =>
+              this.setState({ startDate, endDate })
+            } // PropTypes.func.isRequired,
+            focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+            onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
           />
         </div>
         <div className="content">

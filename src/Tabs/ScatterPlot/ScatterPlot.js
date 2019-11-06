@@ -12,6 +12,8 @@ class RawData extends Component {
     this.state = { keys: [], data: [] };
 
     this.setParam = this.setParam.bind(this);
+    this.toggleLine = this.toggleLine.bind(this);
+    this.toggleScale = this.toggleScale.bind(this);
   }
 
   componentDidMount() {
@@ -44,13 +46,31 @@ class RawData extends Component {
     this.params[i] = data;
 
     if (this.params.length === 2) {
-      this.scatter.buildScatter(this.params, this.state.isLog);
+      this.scatter.buildScatter(
+        this.params,
+        this.state.isLog,
+        this.state.showLine
+      );
     }
+  }
+
+  toggleLine() {
+    this.setState({ showLine: !this.state.showLine }, () =>
+      this.scatter.buildScatter(
+        this.params,
+        this.state.isLog,
+        this.state.showLine
+      )
+    );
   }
 
   toggleScale() {
     this.setState({ isLog: !this.state.isLog }, () =>
-      this.scatter.buildScatter(this.params, this.state.isLog)
+      this.scatter.buildScatter(
+        this.params,
+        this.state.isLog,
+        this.state.showLine
+      )
     );
   }
 
@@ -83,12 +103,12 @@ class RawData extends Component {
         <div className="content">
           <svg id="svg" width="1195.5px" height="95%" />
           <br />
-          <Checkbox toggle label="Show line of best fit" />
           <Checkbox
             toggle
-            label="Toggle scale"
-            onChange={this.toggleScale.bind(this)}
+            label="Show line of best fit"
+            onChange={this.toggleLine}
           />
+          <Checkbox toggle label="Toggle scale" onChange={this.toggleScale} />
         </div>
       </div>
     );

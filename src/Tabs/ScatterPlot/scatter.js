@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import * as ss from "simple-statistics";
 
 class scatterPlot {
   constructor() {
@@ -49,6 +50,11 @@ class scatterPlot {
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .text("");
+
+    this.line = this.svg
+      .append("path")
+      .attr("class", "line")
+      .style("stroke-opacity", 0);
   }
 
   updateAxes(params, isLog) {
@@ -105,10 +111,16 @@ class scatterPlot {
       .transition()
       .duration(this.duration)
       .text(params[1]);
+
+    this.bestFit = ss.linearRegression(
+      this.fData.map(d => [+d[params[0]], +d[params[1]]])
+    );
+    this.bestFitFunc = ss.linearRegressionLine(this.bestFit);
   }
 
-  buildScatter(params, isLog) {
+  buildScatter(params, isLog, enableLine) {
     this.updateAxes(params, isLog);
+    this.toggleLine(enableLine);
 
     var selection = this.svg.selectAll(".bubble").data(this.fData);
     var group = this.svg.append("g").attr("class", "tooltips");
@@ -154,6 +166,30 @@ class scatterPlot {
       .duration(this.duration)
       .style("opacity", 0)
       .remove();
+  }
+
+  toggleLine(enable) {
+    if (enable) {
+      var points = this.xScale
+        .domain()
+        .map(d => ({ x: d, y: this.bestFitFunc(d) }));
+
+      var line = d3
+        .line()
+        .x(d => this.xScale(d.x))
+        .y(d => this.yScale(d.y));
+
+      this.line
+        .transition()
+        .duration(this.duration)
+        .attr("d", line(points))
+        .style("stroke-opacity", 1);
+    } else {
+      this.line
+        .transition()
+        .duration(this.duration)
+        .style("stroke-opacity", 0);
+    }
   }
 }
 

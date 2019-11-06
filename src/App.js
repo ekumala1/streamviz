@@ -12,6 +12,9 @@ import Login from "./Tabs/Login/Login";
 import "./App.css";
 
 import "semantic-ui-css/semantic.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
 
 class App extends Component {
   render() {
