@@ -86,7 +86,7 @@ class RawData extends Component {
           <Checkbox toggle label="Show line of best fit" />
           <Checkbox
             toggle
-            label="Toggle scale"
+            label="Logarithmic Scale"
             onChange={this.toggleScale.bind(this)}
           />
         </div>
