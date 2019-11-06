@@ -51,10 +51,27 @@ class scatterPlot {
       .style("text-anchor", "middle")
       .text("");
 
+    this.bubbles = this.svg.append("g").attr("class", "bubbles");
+
     this.line = this.svg
       .append("path")
       .attr("class", "line")
       .style("stroke-opacity", 0);
+
+    this.pointer = this.svg
+      .append("circle")
+      .attr("class", "focus")
+      .attr("r", 3);
+    this.focusXLine = this.svg
+      .append("line")
+      .attr("class", "focus")
+      .attr("y1", this.yScale(this.yScale.domain()[0]))
+      .attr("y2", this.yScale(this.yScale.domain()[1]));
+    this.focusYLine = this.svg
+      .append("line")
+      .attr("class", "focus")
+      .attr("x1", this.xScale(this.xScale.domain()[0]))
+      .attr("x2", this.xScale(this.xScale.domain()[1]));
   }
 
   updateAxes(params, isLog) {
@@ -122,7 +139,7 @@ class scatterPlot {
     this.updateAxes(params, isLog);
     this.toggleLine(enableLine);
 
-    var selection = this.svg.selectAll(".bubble").data(this.fData);
+    var selection = this.bubbles.selectAll(".bubble").data(this.fData);
     var group = this.svg.append("g").attr("class", "tooltips");
     var xScale = this.xScale;
     var yScale = this.yScale;
@@ -184,6 +201,32 @@ class scatterPlot {
         .duration(this.duration)
         .attr("d", line(points))
         .style("stroke-opacity", 1);
+
+      var pthis = this;
+      this.svg
+        .on("mousemove", function() {
+          var mouse = d3.mouse(this);
+          var value = pthis.yScale(
+            pthis.bestFitFunc(pthis.xScale.invert(mouse[0]))
+          );
+          pthis.pointer
+            .attr("opacity", 1)
+            .attr("cx", mouse[0])
+            .attr("cy", value);
+          pthis.focusXLine
+            .attr("opacity", 0.5)
+            .attr("x1", mouse[0])
+            .attr("x2", mouse[0]);
+          pthis.focusYLine
+            .attr("opacity", 0.5)
+            .attr("y1", value)
+            .attr("y2", value);
+        })
+        .on("mouseout", () => {
+          this.pointer.attr("opacity", 0);
+          this.focusXLine.attr("opacity", 0);
+          this.focusYLine.attr("opacity", 0);
+        });
     } else {
       this.line
         .transition()

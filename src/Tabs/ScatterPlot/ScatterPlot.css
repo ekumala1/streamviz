@@ -8,3 +8,16 @@
   padding: 10px;
   flex-grow: 1;
 }
+
+line {
+  pointer-events: none;
+}
+
+line.focus {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+circle.focus {
+  fill: black;
+}
