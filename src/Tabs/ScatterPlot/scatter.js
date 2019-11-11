@@ -68,12 +68,14 @@ class scatterPlot {
       .attr("class", "focus")
       .attr("y1", this.yScale(this.yScale.domain()[0]))
       .attr("y2", this.yScale(this.yScale.domain()[1]))
+      .attr("stroke-dasharray", "5")
       .style("opacity", 0);
     this.focusYLine = this.svg
       .append("line")
       .attr("class", "focus")
       .attr("x1", this.xScale(this.xScale.domain()[0]))
       .attr("x2", this.xScale(this.xScale.domain()[1]))
+      .attr("stroke-dasharray", "5")
       .style("opacity", 0);
 
     this.focusXText = this.svg
