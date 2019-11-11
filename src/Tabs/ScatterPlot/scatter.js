@@ -153,6 +153,47 @@ class scatterPlot {
     this.updateAxes(params, isLog);
     this.toggleLine(enableLine);
 
+    var pthis = this;
+    this.svg
+      .on("mousemove", function() {
+        var mouse = d3.mouse(this);
+
+        // get coordinates of crosshair
+        var xValue = pthis.xScale.invert(mouse[0]); // always at mouse's X value
+        var yValue = enableLine
+          ? pthis.bestFitFunc(xValue)
+          : pthis.xScale.invert(mouse[1]); // if line, snap y to line, else, at mouse's Y value
+        var yPixel = enableLine ? pthis.yScale(yValue) : mouse[1];
+
+        pthis.pointer
+          .attr("opacity", 1)
+          .attr("cx", mouse[0])
+          .attr("cy", yPixel);
+        pthis.focusXLine
+          .style("opacity", 0.5)
+          .attr("x1", mouse[0])
+          .attr("x2", mouse[0]);
+        pthis.focusYLine
+          .style("opacity", 0.5)
+          .attr("y1", yPixel)
+          .attr("y2", yPixel);
+        pthis.focusXText
+          .style("opacity", 1)
+          .attr("x", mouse[0])
+          .text(xValue.toFixed(2));
+        pthis.focusYText
+          .style("opacity", 1)
+          .attr("y", yPixel)
+          .text(yValue.toFixed(2));
+      })
+      .on("mouseout", () => {
+        this.pointer.attr("opacity", 0);
+        this.focusXLine.style("opacity", 0);
+        this.focusYLine.style("opacity", 0);
+        this.focusXText.style("opacity", 0);
+        this.focusYText.style("opacity", 0);
+      });
+
     var selection = this.bubbles.selectAll(".bubble").data(this.fData);
     var group = this.svg.append("g").attr("class", "tooltips");
     var xScale = this.xScale;
@@ -215,35 +256,6 @@ class scatterPlot {
         .duration(this.duration)
         .attr("d", line(points))
         .style("stroke-opacity", 1);
-
-      var pthis = this;
-      this.svg
-        .on("mousemove", function() {
-          var mouse = d3.mouse(this);
-          var xValue = pthis.xScale.invert(mouse[0]);
-          var yValue = pthis.bestFitFunc(xValue);
-          var yPixel = pthis.yScale(yValue);
-
-          pthis.pointer
-            .attr("opacity", 1)
-            .attr("cx", mouse[0])
-            .attr("cy", yPixel);
-          pthis.focusXLine
-            .style("opacity", 0.5)
-            .attr("x1", mouse[0])
-            .attr("x2", mouse[0]);
-          pthis.focusYLine
-            .style("opacity", 0.5)
-            .attr("y1", yPixel)
-            .attr("y2", yPixel);
-          pthis.focusXText.attr("x", mouse[0]).text(xValue.toFixed(2));
-          pthis.focusYText.attr("y", yPixel).text(yValue.toFixed(2));
-        })
-        .on("mouseout", () => {
-          this.pointer.attr("opacity", 0);
-          this.focusXLine.style("opacity", 0);
-          this.focusYLine.style("opacity", 0);
-        });
     } else {
       this.line
         .transition()
