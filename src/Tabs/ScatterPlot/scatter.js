@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import * as ss from "simple-statistics";
-
+/* The class with methods to draw a scatterplot with info from
+the model*/
 class scatterPlot {
   constructor() {
     this.svg = d3.select("#svg");
