@@ -49,33 +49,17 @@ class RawData extends Component {
   setParam(i, data) {
     this.params[i] = data;
 
-    if (this.params.length === 2) {
-      this.scatter.buildScatter(
-        this.params,
-        this.state.isLog,
-        this.state.showLine
-      );
-    }
+    if (this.params.length === 2) this.scatter.draw(this.params);
   }
 
   toggleLine() {
-    this.setState({ showLine: !this.state.showLine }, () =>
-      this.scatter.buildScatter(
-        this.params,
-        this.state.isLog,
-        this.state.showLine
-      )
-    );
+    this.scatter.drawLine = !this.scatter.drawLine;
+    this.scatter.draw(this.params);
   }
 
   toggleScale() {
-    this.setState({ isLog: !this.state.isLog }, () =>
-      this.scatter.buildScatter(
-        this.params,
-        this.state.isLog,
-        this.state.showLine
-      )
-    );
+    this.scatter.isLog = !this.scatter.isLog;
+    this.scatter.draw(this.params);
   }
 
   //render contains the layout of elements in the window of this plot
