@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 
 import "./BottomBar.css";
-
+/* The bar at the base of the main view, which currently consists
+of only the View Raw Data tab*/
 class BottomBar extends Component {
   render() {
     return (

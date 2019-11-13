@@ -3,7 +3,7 @@ import "./BoxPlot.css";
 
 import boxPlot from "./box";
 import { Dropdown, Checkbox } from "semantic-ui-react";
-
+/* The class to draw the Box Plot using the methods from box.js*/
 class RawData extends Component {
   constructor() {
     super();

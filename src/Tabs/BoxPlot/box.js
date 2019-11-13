@@ -2,7 +2,7 @@ import * as d3 from "d3";
 
 var whiskerWidth = 40;
 var boxWidth = 50;
-
+/* Thhe class to pull data from the model and draw the box plot */
 class boxPlot {
   constructor() {
     this.svg = d3.select("#svg");
