@@ -22,6 +22,10 @@ class RawData extends Component {
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);
+        //remove variables that we do not want the ability to graph
+        //WSID is just an ID so the graph is not very useful
+        //ecoli method is the method which which ecoli info was collected
+        //a box plot of date is not important
         variables.splice(variables.indexOf("WSID"), 1);
         variables.splice(variables.indexOf("ecoli_method"), 1);
         variables.splice(variables.indexOf("date"), 1);
