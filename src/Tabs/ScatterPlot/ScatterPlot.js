@@ -78,6 +78,8 @@ class RawData extends Component {
     );
   }
 
+  //render contains the layout of elements in the window of this plot
+  //includes dropdowns, buttons, and other user interface
   render() {
     var options = this.state.keys.map(key => {
       return { key: key, text: key, value: key };

@@ -93,6 +93,8 @@ class RawData extends Component {
     }
   }
 
+  //render contains the layout of elements in the window of this plot
+  //includes dropdowns, buttons, and other user interface
   render() {
     var getClass = column => {
       if (column === this.state.column)
