@@ -4,7 +4,8 @@ import "./TimeSeries.css";
 import timePlot from "./time";
 import { Dropdown } from "semantic-ui-react";
 import { DateRangePicker } from "react-dates";
-
+/* The class to draw the timeseries plot using the methods from
+time.js */
 class TimeSeries extends Component {
   params = [];
 

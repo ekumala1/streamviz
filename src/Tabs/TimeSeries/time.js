@@ -2,7 +2,8 @@ import * as d3 from "d3";
 
 // smh js doesn't have average built in
 var average = arr => arr.reduce((a, b) => a + b) / arr.length;
-
+/* A class with the methods to draw a timeseries plot using data
+from the model*/
 class timePlot {
   constructor() {
     this.svg = d3.select("#svg");
