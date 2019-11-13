@@ -2,7 +2,8 @@ import * as d3 from "d3";
 
 var whiskerWidth = 40;
 var boxWidth = 50;
-/* Thhe class to pull data from the model and draw the box plot */
+/* Thhe class contains methods
+to pull data from the model and draw the box plot */
 class boxPlot {
   constructor() {
     this.svg = d3.select("#svg");
@@ -17,7 +18,7 @@ class boxPlot {
   clear() {
     this.svg.html("");
   }
-
+  //creates the axes for a plot based on the scale of the screen
   buildAxes() {
     this.xScale = d3
       .scaleBand()
@@ -48,6 +49,7 @@ class boxPlot {
       .text("Amount");
   }
 
+  //updates the axes when data is actually graphed
   updateAxes(param) {
     // added some filtering code
     this.fData = this.data.map(d => d[param]).filter(d => d != null);
@@ -72,6 +74,7 @@ class boxPlot {
       .call(d3.axisLeft().scale(this.yScale));
   }
 
+  //create the boxplot with or without outliers dependent on bool outliers
   buildBox(outliers) {
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
     this.svg
@@ -178,6 +181,8 @@ class boxPlot {
       .attr("y2", this.yScale(quantiles[2]));
   }
 
+  //a method to be invoked if the outliers should be drawn as points
+  //dependent on a toggle on the page
   drawOutliers(group, outliers) {
     console.log("drawing " + outliers.length + " outliers");
     var selection = group.selectAll(".bubble").data(outliers);
