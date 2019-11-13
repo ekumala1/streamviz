@@ -3,7 +3,7 @@ import "./ScatterPlot.css";
 
 import scatterPlot from "./scatter";
 import { Dropdown, Checkbox } from "semantic-ui-react";
-
+/* The class to draw a scatterplot using the methods in scatter.js*/
 class RawData extends Component {
   params = [];
 
