@@ -8,6 +8,7 @@ import ScatterPlot from "./Tabs/ScatterPlot/ScatterPlot";
 import TimeSeries from "./Tabs/TimeSeries/TimeSeries";
 import RawData from "./Tabs/RawData/RawData";
 import Login from "./Tabs/Login/Login";
+import MapView from "./Tabs/MapView/MapView";
 
 import "./App.css";
 
@@ -26,6 +27,8 @@ class App extends Component {
             <Route path="/time" component={TimeSeries} />
             <Route path="/login" component={Login} />
             <Route path="/raw" component={RawData} />
+            <Route path="/map" component={MapView} />
+            <Route path="/landing" component={RawData} />
           </div>
         </div>
       </Router>
