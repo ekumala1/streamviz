@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Form, Message } from "semantic-ui-react";
 
 import "./Login.css";
-
+/* The class to handle the login tab*/
 class Login extends Component {
   constructor() {
     super();
