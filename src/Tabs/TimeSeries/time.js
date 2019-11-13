@@ -87,6 +87,7 @@ class timePlot {
       .attr("x", 12);
   }
 
+  //changes axes based on the data being presented
   updateAxes() {
     // this.xScale.domain(d3.extent(data, d => +d[params[0]]));
     // this.yScale.domain(d3.extent(data, d => +d[params[1]]));
