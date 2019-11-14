@@ -70,10 +70,7 @@ class timePlot extends graph {
     this.fData = d3
       .nest()
       .key(d => d.date)
-      .rollup(d => {
-        var values = d.map(e => +e[param]);
-        return average(d.map(e => +e[param]));
-      })
+      .rollup(d => average(d.map(e => +e[param])))
       .entries(this.fData);
     // date is now in the format of a String because rollup converts Objects toString()
 

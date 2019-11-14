@@ -64,6 +64,8 @@ class graph {
       yExtent = d3.extent(this.fData, d => +d[this.yVar]),
       yRange = yExtent[1] - yExtent[0];
 
+    console.log(this.fData);
+
     // set domain to be extent +- 5%
     this.xScale.domain([
       Math.max(xExtent[0] - xRange * 0.02, 0),

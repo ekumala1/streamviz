@@ -1,185 +1,155 @@
 import * as d3 from "d3";
 import graph from "../graph";
 
-var whiskerWidth = 40;
 var boxWidth = 50;
-/* Thhe class contains methods
+/* The class contains methods
 to pull data from the model and draw the box plot */
 class boxPlot extends graph {
-  constructor() {
-    this.svg = d3.select("#svg");
-    var svgElement = document.getElementById("svg");
-
-    this.width = svgElement.getBoundingClientRect().width;
-    this.height = svgElement.getBoundingClientRect().height;
-
-    this.duration = 1000;
-  }
-
-  clear() {
-    this.svg.html("");
-  }
-  //creates the axes for a plot based on the scale of the screen
+  // creates the axes for a plot based on the scale of the screen
   buildAxes() {
-    this.xScale = d3
-      .scaleBand()
-      .domain([])
-      .range([50, this.width - 100]);
+    super.buildAxes();
 
-    this.yScale = d3
-      .scaleLinear()
-      .domain([0, 1])
-      .range([this.height - 50, 50]);
+    this.xScale = d3.scaleBand().range([50, this.width - 100]);
+    this.xAxis.call(d3.axisBottom().scale(this.xScale));
+  }
 
-    this.xSelect = this.svg
-      .append("g")
-      .attr("transform", `translate(0, ${this.height - 50})`)
-      .call(d3.axisBottom().scale(this.xScale));
-    this.ySelect = this.svg
-      .append("g")
-      .attr("transform", "translate(50, 0)")
-      .call(d3.axisLeft().scale(this.yScale));
+  filterData(param) {
+    this.fData = this.data.filter(d => d[param] != null);
+    this.dData = d3
+      .nest()
+      .key(d => d.date.getFullYear())
+      .rollup(d => d.map(e => e[param]).sort((a, b) => a - b))
+      .entries(this.fData);
 
-    this.axisVertical = this.svg
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0)
-      .attr("x", 0 - this.height / 2)
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Amount");
+    this.xVar = "date";
+    this.yVar = param;
   }
 
   //updates the axes when data is actually graphed
   updateAxes(param) {
-    // added some filtering code
-    this.fData = this.data.map(d => d[param]).filter(d => d != null);
-    this.param = param;
+    super.updateAxes(param);
 
-    var yExtent = d3.extent(this.fData),
-      yRange = yExtent[1] - yExtent[0];
-
-    this.xScale.domain([param]);
-    this.yScale.domain([
-      yExtent[0] - yRange * 0.02,
-      yExtent[1] + yRange * 0.02
-    ]);
-
-    this.xSelect
+    this.xScale.domain(this.dData.map(d => d.key));
+    this.xAxis
       .transition()
       .duration(this.duration)
       .call(d3.axisBottom().scale(this.xScale));
-    this.ySelect
-      .transition()
-      .duration(this.duration)
-      .call(d3.axisLeft().scale(this.yScale));
   }
 
   //create the boxplot with or without outliers dependent on bool outliers
-  buildBox(outliers) {
+  draw(param, drawOutliers) {
+    super.draw(param);
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
-    this.svg
-      .selectAll(".boxplot")
-      .transition()
-      .duration(this.duration)
-      .style("fill-opacity", 0)
-      .style("stroke-opacity", 0)
-      .remove();
+    var selection = this.svg.selectAll(".plot").data(this.dData);
+    var group = selection
+      .enter()
+      .append("g")
+      .attr("class", "plot");
 
     // make proportional whisker/box widths
-    whiskerWidth = this.xScale.bandwidth() * 0.3;
-    boxWidth = this.xScale.bandwidth() * 0.4;
-    var getQuantile = d => d3.quantile(this.fData, d);
+    boxWidth = this.xScale.bandwidth() * 0.6;
 
-    // create a group for easy manipulation
-    var g = this.svg
-      .append("g")
-      .attr("class", "boxplot")
+    this.drawWhiskers(group);
+    this.drawBox(group);
+
+    var updateGroup = group
+      .merge(selection)
+      .transition()
+      .duration(this.duration)
       .attr(
         "transform",
-        `translate(${this.xScale(this.param) +
-          this.xScale.bandwidth() / 2 -
-          boxWidth / 2}, 0)`
-      )
-      .style("stroke-opacity", 0);
-
-    // 1d dataset of current column
-    var array = this.fData.sort((a, b) => a - b);
-
-    // find quantiles
-    var q = [0, 0.25, 0.5, 0.75, 1];
-    q = q.map(getQuantile);
-    var iqr = q[3] - q[1];
-
-    if (outliers) {
-      //Note: Outliers is the parameter, outlier is the actual list of points that will be plotted
-      // find outliers
-
-      var outlier = array.filter(
-        d => d < q[1] - 1.5 * iqr || d > q[3] + 1.5 * iqr
+        d => `translate(${this.xScale(d.key) + this.xScale.bandwidth() / 2}, 0)`
       );
 
-      // remove outliers
-      array = array.filter(d => !outlier.includes(d));
-    }
+    this.updateWhiskers(updateGroup);
+    this.updateBox(updateGroup);
 
-    this.drawWhiskers(g, Math.min(...array), Math.max(...array));
-    this.drawBox(g, q);
-    if (outliers) this.drawOutliers(g, outlier);
-    g.transition()
+    selection
+      .exit()
+      .transition()
       .duration(this.duration)
-      .style("stroke-opacity", 1);
+      .style("opacity", 0)
+      .remove();
+
+    // if (drawOutliers) {
+    //   //Note: Outliers is the parameter, outlier is the actual list of points that will be plotted
+    //   // find outliers
+
+    //   var outliers = array.filter(
+    //     d => d < q[1] - 1.5 * iqr || d > q[3] + 1.5 * iqr
+    //   );
+
+    //   // remove outliers
+    //   array = array.filter(d => !outliers.includes(d));
+
+    //   this.drawOutliers(group, outliers);
+    // }
   }
 
   // start of box plotting functions
-  drawWhiskers(group, min, max) {
-    var offset = (boxWidth - whiskerWidth) / 2;
-
-    // bottom whisker
+  drawWhiskers(group) {
     group
       .append("line")
       .attr("class", "line")
-      .attr("x1", offset)
-      .attr("y1", this.yScale(min))
-      .attr("x2", whiskerWidth + offset)
-      .attr("y2", this.yScale(min));
-
-    // line between whiskers
-    group
-      .append("line")
-      .attr("class", "line")
-      .attr("x1", boxWidth / 2)
-      .attr("y1", this.yScale(min))
-      .attr("x2", boxWidth / 2)
-      .attr("y2", this.yScale(max));
-
-    // top whisker
-    group
-      .append("line")
-      .attr("class", "line")
-      .attr("x1", offset)
-      .attr("y1", this.yScale(max))
-      .attr("x2", whiskerWidth + offset)
-      .attr("y2", this.yScale(max));
+      .attr("x1", 0)
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0)))
+      .attr("x2", 0)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 1)));
   }
 
-  drawBox(group, quantiles) {
+  drawBox(group) {
     // box
     group
       .append("rect")
       .attr("class", "box")
       .attr("width", boxWidth)
-      .attr("y", this.yScale(quantiles[3]))
-      .attr("height", this.yScale(quantiles[1]) - this.yScale(quantiles[3]));
+      .attr("x", -boxWidth / 2)
+      .attr("y", d => this.yScale(d3.quantile(d.value, 0.75)))
+      .attr(
+        "height",
+        d =>
+          this.yScale(d3.quantile(d.value, 0.25)) -
+          this.yScale(d3.quantile(d.value, 0.75))
+      );
 
     // median
     group
       .append("line")
-      .attr("class", "line")
+      .attr("class", "median")
+      .attr("x1", -boxWidth / 2)
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0.5)))
+      .attr("x2", boxWidth / 2)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 0.5)));
+  }
+
+  updateWhiskers(group) {
+    group
+      .select(".line")
       .attr("x1", 0)
-      .attr("y1", this.yScale(quantiles[2]))
-      .attr("x2", boxWidth)
-      .attr("y2", this.yScale(quantiles[2]));
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0)))
+      .attr("x2", 0)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 1)));
+  }
+
+  updateBox(group) {
+    group
+      .select(".box")
+      .attr("width", boxWidth)
+      .attr("x", -boxWidth / 2)
+      .attr("y", d => this.yScale(d3.quantile(d.value, 0.75)))
+      .attr(
+        "height",
+        d =>
+          this.yScale(d3.quantile(d.value, 0.25)) -
+          this.yScale(d3.quantile(d.value, 0.75))
+      );
+
+    group
+      .select(".median")
+      .attr("x1", -boxWidth / 2)
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0.5)))
+      .attr("x2", boxWidth / 2)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 0.5)));
   }
 
   //a method to be invoked if the outliers should be drawn as points

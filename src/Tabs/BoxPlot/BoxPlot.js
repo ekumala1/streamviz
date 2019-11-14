@@ -29,22 +29,22 @@ class RawData extends Component {
         variables.splice(variables.indexOf("WSID"), 1);
         variables.splice(variables.indexOf("ecoli_method"), 1);
         variables.splice(variables.indexOf("date"), 1);
+
         this.setState({ keys: variables, data: result });
         this.state.data.forEach(d => (d.date = new Date(d.date)));
         this.setState({ outliers: false });
-        console.log(this.state.data);
 
         this.box.data = this.state.data;
       });
   }
 
   setParam(event, data) {
-    this.box.updateAxes(data.value);
-    this.box.buildBox(this.state.outliers);
+    this.param = data.value;
+    this.box.draw(this.param, this.state.outliers);
   }
   setOutliers() {
     this.setState({ outliers: !this.state.outliers }, () => {
-      this.box.buildBox(this.state.outliers);
+      this.box.draw(this.param, this.state.outliers);
     });
   }
   //render contains the layout of elements in the window of this plot
