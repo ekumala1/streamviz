@@ -49,8 +49,8 @@ class boxPlot extends graph {
     // make proportional whisker/box widths
     boxWidth = this.xScale.bandwidth() * 0.6;
 
-    this.drawWhiskers(group);
-    this.drawBox(group);
+    this.drawWhiskers(group, drawOutliers);
+    this.drawBox(group, drawOutliers);
 
     var updateGroup = group
       .merge(selection)
@@ -61,8 +61,8 @@ class boxPlot extends graph {
         d => `translate(${this.xScale(d.key) + this.xScale.bandwidth() / 2}, 0)`
       );
 
-    this.updateWhiskers(updateGroup);
-    this.updateBox(updateGroup);
+    this.updateWhiskers(updateGroup, drawOutliers);
+    this.updateBox(updateGroup, drawOutliers);
 
     selection
       .exit()
@@ -87,7 +87,7 @@ class boxPlot extends graph {
   }
 
   // start of box plotting functions
-  drawWhiskers(group) {
+  drawWhiskers(group, drawOutliers) {
     group
       .append("line")
       .attr("class", "line")
@@ -97,7 +97,7 @@ class boxPlot extends graph {
       .attr("y2", d => this.yScale(d3.quantile(d.value, 1)));
   }
 
-  drawBox(group) {
+  drawBox(group, drawOutliers) {
     // box
     group
       .append("rect")
@@ -122,7 +122,7 @@ class boxPlot extends graph {
       .attr("y2", d => this.yScale(d3.quantile(d.value, 0.5)));
   }
 
-  updateWhiskers(group) {
+  updateWhiskers(group, drawOutliers) {
     group
       .select(".line")
       .attr("x1", 0)
@@ -131,7 +131,7 @@ class boxPlot extends graph {
       .attr("y2", d => this.yScale(d3.quantile(d.value, 1)));
   }
 
-  updateBox(group) {
+  updateBox(group, drawOutliers) {
     group
       .select(".box")
       .attr("width", boxWidth)
