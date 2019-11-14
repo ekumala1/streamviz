@@ -1,10 +1,11 @@
 import * as d3 from "d3";
+import graph from "../graph";
 
 var whiskerWidth = 40;
 var boxWidth = 50;
 /* Thhe class contains methods
 to pull data from the model and draw the box plot */
-class boxPlot {
+class boxPlot extends graph {
   constructor() {
     this.svg = d3.select("#svg");
     var svgElement = document.getElementById("svg");

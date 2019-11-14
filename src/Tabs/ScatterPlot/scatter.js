@@ -71,8 +71,6 @@ class scatterPlot extends graph {
         .domain()
         .map(d => ({ x: d, y: this.bestFitFunc(d) }));
 
-      console.log(points);
-
       var line = d3
         .line()
         .x(d => this.xScale(d.x))
@@ -138,8 +136,6 @@ class scatterPlot extends graph {
 
     var selection = this.bubbles.selectAll(".bubble").data(this.fData);
     var group = this.svg.append("g").attr("class", "tooltips");
-    var xScale = this.xScale;
-    var yScale = this.yScale;
 
     var handleMouseOver = (d, i) => {
       // d3.select(this).attr("r", 10);

@@ -59,9 +59,9 @@ class graph {
     // this.yScale.domain(d3.extent(data, d => +d[params[1]]));
 
     // courtesy of https://stackoverflow.com/questions/34888205/insert-padding-so-that-points-do-not-overlap-with-y-or-x-axis
-    var xExtent = d3.extent(this.fData, d => +d[params[0]]),
+    var xExtent = d3.extent(this.fData, d => +d[this.xVar]),
       xRange = xExtent[1] - xExtent[0],
-      yExtent = d3.extent(this.fData, d => +d[params[1]]),
+      yExtent = d3.extent(this.fData, d => +d[this.yVar]),
       yRange = yExtent[1] - yExtent[0];
 
     // set domain to be extent +- 5%

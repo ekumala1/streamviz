@@ -48,15 +48,15 @@ class TimeSeries extends Component {
   }
 
   setParam(event, data) {
-    this.params[0] = data.value;
-    console.log(this.params);
+    this.param = data.value;
+    console.log(this.param);
 
-    this.time.buildLinePlot(this.params);
+    this.time.draw(this.param);
   }
 
   handleSearch(event, data) {
     this.time.WSIDs = data.value;
-    this.time.buildLinePlot(this.params);
+    this.time.draw(this.param);
   }
 
   // if id is 0, start date

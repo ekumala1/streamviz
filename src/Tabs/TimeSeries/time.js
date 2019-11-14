@@ -1,61 +1,31 @@
 import * as d3 from "d3";
+import graph from "../graph";
 
 // smh js doesn't have average built in
 var average = arr => arr.reduce((a, b) => a + b) / arr.length;
 /* A class with the methods to draw a timeseries plot using data
 from the model*/
-class timePlot {
+class timePlot extends graph {
   constructor() {
-    this.svg = d3.select("#svg");
-    var svgElement = document.getElementById("svg");
-
-    this.width = svgElement.getBoundingClientRect().width;
-    this.height = svgElement.getBoundingClientRect().height;
-
+    super();
     this.WSIDs = [];
-    this.duration = 1000;
-  }
-
-  clear() {
-    this.svg.html("");
   }
 
   buildAxes() {
     // we don't want our padding code here because time series graphs start from the left
+    super.buildAxes();
+
     this.xScale = d3
       .scaleTime()
-      // .domain([0, 1])
       .domain(d3.extent(this.data, d => d.date))
       .range([50, this.width - 100]);
+    this.xAxis.call(d3.axisBottom().scale(this.xScale));
+    this.xLabel.text("Time");
 
-    this.yScale = d3
-      .scaleLinear()
-      .domain([0, 1])
-      .range([this.height - 50, 50]);
-
-    this.xSelect = this.svg
-      .append("g")
-      .attr("transform", `translate(0, ${this.height - 50})`)
-      .call(d3.axisBottom().scale(this.xScale));
-    this.ySelect = this.svg
-      .append("g")
-      .attr("transform", "translate(50, 0)")
-      .call(d3.axisLeft().scale(this.yScale));
-
-    this.axisHorizontal = this.svg
-      .append("text")
-      .attr("transform", `translate(${this.width / 2}, ${this.height - 10})`)
-      .style("text-anchor", "middle")
-      .text("Time");
-
-    this.axisVertical = this.svg
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0)
-      .attr("x", 0 - this.height / 2)
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("");
+    this.path = this.svg
+      .append("path")
+      .style("stroke-opacity", 0)
+      .attr("class", "line");
 
     this.pointer = this.svg
       .append("circle")
@@ -87,33 +57,11 @@ class timePlot {
       .attr("x", 12);
   }
 
-  //changes axes based on the data being presented
-  updateAxes() {
-    // this.xScale.domain(d3.extent(data, d => +d[params[0]]));
-    // this.yScale.domain(d3.extent(data, d => +d[params[1]]));
-
-    // courtesy of https://stackoverflow.com/questions/34888205/insert-padding-so-that-points-do-not-overlap-with-y-or-x-axis
-    var yExtent = d3.extent(this.fData, d => d.value),
-      yRange = yExtent[1] - yExtent[0];
-
-    // set domain to be extent +- 5%
-    this.yScale.domain([
-      yExtent[0] - yRange * 0.02,
-      yExtent[1] + yRange * 0.02
-    ]);
-
-    this.ySelect
-      .transition()
-      .duration(this.duration)
-      .call(d3.axisLeft().scale(this.yScale));
-  }
-
-  filterData(params) {
-    this.axisVertical.text(params[0]);
+  filterData(param) {
     var no_wsids = this.WSIDs.length === 0;
     this.fData = this.data.filter(
       d =>
-        d[params[0]] != null &&
+        d[param] != null &&
         d.date != null &&
         (no_wsids || this.WSIDs.includes(d.WSID))
     );
@@ -123,8 +71,8 @@ class timePlot {
       .nest()
       .key(d => d.date)
       .rollup(d => {
-        var values = d.map(e => +e[params[0]]);
-        return average(values);
+        var values = d.map(e => +e[param]);
+        return average(d.map(e => +e[param]));
       })
       .entries(this.fData);
     // date is now in the format of a String because rollup converts Objects toString()
@@ -137,6 +85,28 @@ class timePlot {
 
     // sort data to put dates in order
     this.fData = this.fData.sort((a, b) => b.key - a.key);
+    this.xVar = "Date";
+    this.yVar = param;
+  }
+
+  //changes axes based on the data being presented
+  updateAxes(param) {
+    this.filterData(param);
+
+    // courtesy of https://stackoverflow.com/questions/34888205/insert-padding-so-that-points-do-not-overlap-with-y-or-x-axis
+    var yExtent = d3.extent(this.fData, d => d.value),
+      yRange = yExtent[1] - yExtent[0];
+
+    // set domain to be extent +- 5%
+    this.yScale.domain([
+      yExtent[0] - yRange * 0.02,
+      yExtent[1] + yRange * 0.02
+    ]);
+
+    this.yAxis
+      .transition()
+      .duration(this.duration)
+      .call(d3.axisLeft().scale(this.yScale));
   }
 
   buildScatter() {
@@ -173,30 +143,24 @@ class timePlot {
       .x(d => this.xScale(d.key))
       .y(d => this.yScale(d.value));
 
-    d3.selectAll(".line")
+    this.path
+      .transition()
+      .duration(this.duration)
+      .style("stroke-opacity", 0.5)
+      .attr("d", line(this.fData));
+
+    this.path
+      .exit()
       .transition()
       .duration(this.duration)
       .style("stroke-opacity", 0)
       .remove();
-
-    var path = this.svg
-      .append("path")
-      .datum(this.fData)
-      .style("stroke-opacity", 0)
-      .attr("class", "line")
-      .attr("d", line);
-
-    path
-      .transition()
-      .duration(this.duration)
-      .style("stroke-opacity", 0.5);
   }
 
-  buildLinePlot(params) {
-    this.filterData(params);
-    this.updateAxes();
-    this.buildLine();
+  draw(param) {
+    super.draw(param);
     this.buildScatter();
+    this.buildLine();
 
     var pthis = this;
     this.svg
@@ -204,7 +168,6 @@ class timePlot {
         var mouse = d3.mouse(this);
         var xValue = pthis.xScale.invert(mouse[0]);
         var yValue = pthis.yScale.invert(mouse[1]);
-        console.log(xValue);
 
         pthis.pointer
           .attr("opacity", 1)
