@@ -68,7 +68,7 @@ class boxPlot extends graph {
       .exit()
       .transition()
       .duration(this.duration)
-      .style("opacity", 0)
+      .attr("transform", d => `translate(${this.width}, 0)`)
       .remove();
 
     // if (drawOutliers) {
