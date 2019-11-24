@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import "./ScatterPlot.css";
+import React, { Component } from 'react';
+import './ScatterPlot.css';
 
-import scatterPlot from "./scatter";
-import { Dropdown, Checkbox } from "semantic-ui-react";
+import scatterPlot from './scatter';
+import { Dropdown, Checkbox } from 'semantic-ui-react';
 /* The class to draw a scatterplot using the methods in scatter.js*/
 class RawData extends Component {
   params = [];
@@ -21,7 +21,7 @@ class RawData extends Component {
     this.scatter.clear();
     this.scatter.buildAxes();
 
-    fetch("http://localhost:5000/streams")
+    fetch('http://localhost:5000/streams')
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);
@@ -29,9 +29,9 @@ class RawData extends Component {
         //WSID is just an ID so the graph is not very useful
         //ecoli method is the method which which ecoli info was collected
         //a scatter plot of date is not important
-        variables.splice(variables.indexOf("WSID"), 1);
-        variables.splice(variables.indexOf("ecoli_method"), 1);
-        variables.splice(variables.indexOf("date"), 1);
+        variables.splice(variables.indexOf('WSID'), 1);
+        variables.splice(variables.indexOf('ecoli_method'), 1);
+        variables.splice(variables.indexOf('date'), 1);
 
         this.setState({ keys: variables });
 
