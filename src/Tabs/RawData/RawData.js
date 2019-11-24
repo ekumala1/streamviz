@@ -18,6 +18,11 @@ class RawData extends Component {
     fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
+        result = result.map(d => {
+          d.WSID = d.WS + d.ID;
+          return d;
+        });
+        console.log(result);
         var WSIDs = result.map(row => row.WSID);
         WSIDs = [...new Set(WSIDs)];
         WSIDs = WSIDs.map(id => ({ key: id, text: id, value: id }));
