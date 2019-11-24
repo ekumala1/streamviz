@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Input, Button } from 'semantic-ui-react';
-import 'font-awesome/css/font-awesome.min.css';
-import Filter from '../Filter/Filter';
+import React, { Component } from "react";
+import { Button } from "semantic-ui-react";
+import "font-awesome/css/font-awesome.min.css";
+import Filter from "../Filter/Filter";
 
 /* The class to draw the Box Plot using the methods from box.js*/
 class MultiFilter extends Component {
@@ -15,7 +15,7 @@ class MultiFilter extends Component {
     this.state = { numFilters: 1 };
     // this.setState({ numFilters: 1 });
 
-    this.width = '150px';
+    this.width = "150px";
   }
 
   handleChange(i, value) {
