@@ -1,9 +1,9 @@
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 class graph {
   constructor() {
-    this.svg = d3.select('#svg');
-    var svgElement = document.getElementById('svg');
+    this.svg = d3.select("#svg");
+    var svgElement = document.getElementById("svg");
 
     this.width = svgElement.getBoundingClientRect().width;
     this.height = svgElement.getBoundingClientRect().height;
@@ -12,7 +12,7 @@ class graph {
   }
 
   clear() {
-    this.svg.html('');
+    this.svg.html("");
   }
 
   buildAxes() {
@@ -20,23 +20,23 @@ class graph {
     this.yScale = d3.scaleLinear().range([this.height - 50, 50]);
 
     this.xAxis = this.svg
-      .append('g')
-      .attr('transform', `translate(0, ${this.height - 50})`)
+      .append("g")
+      .attr("transform", `translate(0, ${this.height - 50})`)
       .call(d3.axisBottom().scale(this.xScale));
     this.yAxis = this.svg
-      .append('g')
-      .attr('transform', 'translate(50, 0)')
+      .append("g")
+      .attr("transform", "translate(50, 0)")
       .call(d3.axisLeft().scale(this.yScale));
 
     this.xLabel = this.svg
-      .append('text')
-      .attr('transform', `translate(${this.width / 2}, ${this.height - 10})`)
-      .style('text-anchor', 'middle');
+      .append("text")
+      .attr("transform", `translate(${this.width / 2}, ${this.height - 10})`)
+      .style("text-anchor", "middle");
     this.yLabel = this.svg
-      .append('text')
-      .attr('transform', `rotate(-90) translate(-${this.height / 2}, 0)`)
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle');
+      .append("text")
+      .attr("transform", `rotate(-90) translate(-${this.height / 2}, 0)`)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle");
   }
 
   filterData(params) {
@@ -63,8 +63,6 @@ class graph {
       xRange = xExtent[1] - xExtent[0],
       yExtent = d3.extent(this.fData, d => +d[this.yVar]),
       yRange = yExtent[1] - yExtent[0];
-
-    console.log(this.fData);
 
     // set domain to be extent +- 5%
     this.xScale.domain([

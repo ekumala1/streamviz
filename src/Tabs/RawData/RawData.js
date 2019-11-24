@@ -19,9 +19,13 @@ class RawData extends Component {
       .then(response => response.json())
       .then(result => {
         result = result.map(d => {
-          d.WSID = d.WS + d.ID;
-          return d;
+          var temp = {};
+          temp.WSID = d.WS + d.ID;
+          for (var key in d)
+            if (key !== "WS" && key !== "ID") temp[key] = d[key];
+          return temp;
         });
+
         console.log(result);
         var WSIDs = result.map(row => row.WSID);
         WSIDs = [...new Set(WSIDs)];

@@ -1,5 +1,5 @@
-import * as d3 from 'd3';
-import graph from '../graph';
+import * as d3 from "d3";
+import graph from "../graph";
 
 var boxWidth = 50;
 /* The class contains methods
@@ -7,7 +7,9 @@ to pull data from the model and draw the box plot */
 class boxPlot extends graph {
   constructor() {
     super();
+    this.WSs = [];
     this.isLog = false;
+    this.yearRange = [];
   }
   // creates the axes for a plot based on the scale of the screen
   buildAxes() {
@@ -18,7 +20,15 @@ class boxPlot extends graph {
   }
 
   filterData(param) {
-    this.fData = this.data.filter(d => d[param] != null);
+    var no_wss = this.WSs.length === 0;
+
+    this.fData = this.data.filter(
+      d =>
+        d[param] != null &&
+        (no_wss || this.WSs.includes(d.WS)) &&
+        (!this.yearRange[0] || d.date.getFullYear() > this.yearRange[0]) &&
+        (!this.yearRange[1] || d.date.getFullYear() < this.yearRange[1])
+    );
     this.dData = d3
       .nest()
       .key(d => d.date.getFullYear())
@@ -26,7 +36,7 @@ class boxPlot extends graph {
       .entries(this.fData)
       .sort((a, b) => +a.key - +b.key);
 
-    this.xVar = 'date';
+    this.xVar = "date";
     this.yVar = param;
   }
 
@@ -50,11 +60,11 @@ class boxPlot extends graph {
   draw(param, drawOutliers) {
     super.draw(param);
     // courtesy of http://bl.ocks.org/jensgrubert/7789216
-    var selection = this.svg.selectAll('.plot').data(this.dData);
+    var selection = this.svg.selectAll(".plot").data(this.dData);
     var group = selection
       .enter()
-      .append('g')
-      .attr('class', 'plot');
+      .append("g")
+      .attr("class", "plot");
 
     // make proportional whisker/box widths
     boxWidth = this.xScale.bandwidth() * 0.6;
@@ -67,7 +77,7 @@ class boxPlot extends graph {
       .transition()
       .duration(this.duration)
       .attr(
-        'transform',
+        "transform",
         d => `translate(${this.xScale(d.key) + this.xScale.bandwidth() / 2}, 0)`
       );
 
@@ -78,7 +88,7 @@ class boxPlot extends graph {
       .exit()
       .transition()
       .duration(this.duration)
-      .attr('transform', d => `translate(${this.width}, 0)`)
+      .attr("transform", d => `translate(${this.width}, 0)`)
       .remove();
 
     // if (drawOutliers) {
@@ -99,24 +109,24 @@ class boxPlot extends graph {
   // start of box plotting functions
   drawWhiskers(group, drawOutliers) {
     group
-      .append('line')
-      .attr('class', 'line')
-      .attr('x1', 0)
-      .attr('y1', d => this.yScale(d3.quantile(d.value, 0)))
-      .attr('x2', 0)
-      .attr('y2', d => this.yScale(d3.quantile(d.value, 1)));
+      .append("line")
+      .attr("class", "line")
+      .attr("x1", 0)
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0)))
+      .attr("x2", 0)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 1)));
   }
 
   drawBox(group, drawOutliers) {
     // box
     group
-      .append('rect')
-      .attr('class', 'box')
-      .attr('width', boxWidth)
-      .attr('x', -boxWidth / 2)
-      .attr('y', d => this.yScale(d3.quantile(d.value, 0.75)))
+      .append("rect")
+      .attr("class", "box")
+      .attr("width", boxWidth)
+      .attr("x", -boxWidth / 2)
+      .attr("y", d => this.yScale(d3.quantile(d.value, 0.75)))
       .attr(
-        'height',
+        "height",
         d =>
           this.yScale(d3.quantile(d.value, 0.25)) -
           this.yScale(d3.quantile(d.value, 0.75))
@@ -124,64 +134,64 @@ class boxPlot extends graph {
 
     // median
     group
-      .append('line')
-      .attr('class', 'median')
-      .attr('x1', -boxWidth / 2)
-      .attr('y1', d => this.yScale(d3.quantile(d.value, 0.5)))
-      .attr('x2', boxWidth / 2)
-      .attr('y2', d => this.yScale(d3.quantile(d.value, 0.5)));
+      .append("line")
+      .attr("class", "median")
+      .attr("x1", -boxWidth / 2)
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0.5)))
+      .attr("x2", boxWidth / 2)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 0.5)));
   }
 
   updateWhiskers(group, drawOutliers) {
     group
-      .select('.line')
-      .attr('x1', 0)
-      .attr('y1', d => this.yScale(d3.quantile(d.value, 0)))
-      .attr('x2', 0)
-      .attr('y2', d => this.yScale(d3.quantile(d.value, 1)));
+      .select(".line")
+      .attr("x1", 0)
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0)))
+      .attr("x2", 0)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 1)));
   }
 
   updateBox(group, drawOutliers) {
     group
-      .select('.box')
-      .attr('width', boxWidth)
-      .attr('x', -boxWidth / 2)
-      .attr('y', d => this.yScale(d3.quantile(d.value, 0.75)))
+      .select(".box")
+      .attr("width", boxWidth)
+      .attr("x", -boxWidth / 2)
+      .attr("y", d => this.yScale(d3.quantile(d.value, 0.75)))
       .attr(
-        'height',
+        "height",
         d =>
           this.yScale(d3.quantile(d.value, 0.25)) -
           this.yScale(d3.quantile(d.value, 0.75))
       );
 
     group
-      .select('.median')
-      .attr('x1', -boxWidth / 2)
-      .attr('y1', d => this.yScale(d3.quantile(d.value, 0.5)))
-      .attr('x2', boxWidth / 2)
-      .attr('y2', d => this.yScale(d3.quantile(d.value, 0.5)));
+      .select(".median")
+      .attr("x1", -boxWidth / 2)
+      .attr("y1", d => this.yScale(d3.quantile(d.value, 0.5)))
+      .attr("x2", boxWidth / 2)
+      .attr("y2", d => this.yScale(d3.quantile(d.value, 0.5)));
   }
 
   //a method to be invoked if the outliers should be drawn as points
   //dependent on a toggle on the page
   drawOutliers(group, outliers) {
-    console.log('drawing ' + outliers.length + ' outliers');
-    var selection = group.selectAll('.bubble').data(outliers);
+    console.log("drawing " + outliers.length + " outliers");
+    var selection = group.selectAll(".bubble").data(outliers);
     var offset = boxWidth / 2;
 
     var enter = selection
       .enter()
-      .append('circle')
-      .attr('class', 'bubble')
-      .attr('r', 0)
-      .attr('cx', offset)
-      .attr('cy', d => this.yScale(d))
-      .style('opacity', 0.5);
+      .append("circle")
+      .attr("class", "bubble")
+      .attr("r", 0)
+      .attr("cx", offset)
+      .attr("cy", d => this.yScale(d))
+      .style("opacity", 0.5);
 
     enter
       .transition()
       .duration(this.duration)
-      .attr('r', 3);
+      .attr("r", 3);
   }
   // end of box plotting functions
 }

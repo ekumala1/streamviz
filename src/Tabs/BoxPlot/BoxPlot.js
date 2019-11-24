@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import './BoxPlot.css';
+import React, { Component } from "react";
+import "./BoxPlot.css";
 
-import boxPlot from './box';
-import { Dropdown, Checkbox } from 'semantic-ui-react';
+import boxPlot from "./box";
+import { Dropdown, Checkbox } from "semantic-ui-react";
+import YearSlider from "../../components/YearSlider/YearSlider";
 /* The class to draw the Box Plot using the methods from box.js*/
 class RawData extends Component {
   constructor() {
@@ -12,6 +13,8 @@ class RawData extends Component {
     this.setParam = this.setParam.bind(this);
     this.setOutliers = this.setOutliers.bind(this);
     this.toggleScale = this.toggleScale.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleDateFilter = this.handleDateFilter.bind(this);
   }
 
   componentDidMount() {
@@ -19,7 +22,7 @@ class RawData extends Component {
     this.box.clear();
     this.box.buildAxes();
 
-    fetch('http://localhost:5000/streams')
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);
@@ -27,11 +30,15 @@ class RawData extends Component {
         //WSID is just an ID so the graph is not very useful
         //ecoli method is the method which which ecoli info was collected
         //a box plot of date is not important
-        variables.splice(variables.indexOf('WSID'), 1);
-        variables.splice(variables.indexOf('ecoli_method'), 1);
-        variables.splice(variables.indexOf('date'), 1);
+        variables.splice(variables.indexOf("WSID"), 1);
+        variables.splice(variables.indexOf("ecoli_method"), 1);
+        variables.splice(variables.indexOf("date"), 1);
 
-        this.setState({ keys: variables, data: result });
+        var WSs = result.map(row => row.WS);
+        WSs = [...new Set(WSs)];
+        WSs = WSs.map(id => ({ key: id, text: id, value: id }));
+
+        this.setState({ keys: variables, data: result, WSs: WSs });
         this.state.data.forEach(d => (d.date = new Date(d.date)));
         this.setState({ outliers: false });
 
@@ -50,8 +57,17 @@ class RawData extends Component {
   }
 
   toggleScale() {
-    console.log(this.box);
     this.box.isLog = !this.box.isLog;
+    this.box.draw(this.param);
+  }
+
+  handleSearch(_, data) {
+    this.box.WSs = data.value;
+    this.box.draw(this.param);
+  }
+
+  handleDateFilter(data) {
+    this.box.yearRange = data;
     this.box.draw(this.param);
   }
 
@@ -74,6 +90,19 @@ class RawData extends Component {
             options={options}
             onChange={this.setParam}
           />
+          <p>Filter by site:</p>
+          {this.state.WSs && (
+            <Dropdown
+              placeholder="WS"
+              multiple
+              search
+              selection
+              options={this.state.WSs}
+              onChange={this.handleSearch}
+            />
+          )}
+          <p>Date range:</p>
+          <YearSlider onChange={this.handleDateFilter}></YearSlider>
         </div>
         <div className="content">
           <svg id="svg" width="1195.5px" height="95%" />

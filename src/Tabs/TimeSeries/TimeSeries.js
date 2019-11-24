@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import './TimeSeries.css';
-import YearSlider from '../../components/YearSlider/YearSlider';
+import React, { Component } from "react";
+import "./TimeSeries.css";
+import YearSlider from "../../components/YearSlider/YearSlider";
 
-import timePlot from './time';
-import { Dropdown, Checkbox } from 'semantic-ui-react';
+import timePlot from "./time";
+import { Dropdown, Checkbox } from "semantic-ui-react";
 
 /* The class to draw the timeseries plot using the methods from
 time.js */
@@ -24,7 +24,7 @@ class TimeSeries extends Component {
     this.time = new timePlot();
     this.time.clear();
 
-    fetch('http://localhost:5000/streams')
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);
@@ -32,16 +32,16 @@ class TimeSeries extends Component {
         //WSID is just an ID so the graph is not very useful
         //ecoli method is the method which which ecoli info was collected
         //a timeseries plot of date is not important
-        variables.splice(variables.indexOf('E.coli Method'), 1);
-        variables.splice(variables.indexOf('date'), 1);
+        variables.splice(variables.indexOf("WS"), 1);
+        variables.splice(variables.indexOf("ID"), 1);
+        variables.splice(variables.indexOf("E.coli Method"), 1);
+        variables.splice(variables.indexOf("date"), 1);
 
-        console.log(result);
+        var WSs = result.map(row => row.WS);
+        WSs = [...new Set(WSs)];
+        WSs = WSs.map(id => ({ key: id, text: id, value: id }));
 
-        var WSIDs = result.map(row => row.WSID);
-        WSIDs = [...new Set(WSIDs)];
-        WSIDs = WSIDs.map(id => ({ key: id, value: id, name: id }));
-
-        this.setState({ keys: variables, WSIDs: WSIDs });
+        this.setState({ keys: variables, WSs: WSs });
 
         result.forEach(
           d => (d.date = d.date == null ? null : new Date(d.date))
@@ -64,7 +64,7 @@ class TimeSeries extends Component {
   }
 
   handleSearch(_, data) {
-    this.time.WSIDs = data.value;
+    this.time.WSs = data.value;
     this.time.draw(this.param);
   }
 
@@ -94,13 +94,13 @@ class TimeSeries extends Component {
             onChange={this.setParam}
           />
           <p>Filter by site:</p>
-          {this.state.WSIDs && (
+          {this.state.WSs && (
             <Dropdown
-              placeholder="WSID"
+              placeholder="WS"
               multiple
               search
               selection
-              options={this.state.WSIDs}
+              options={this.state.WSs}
               onChange={this.handleSearch}
             />
           )}

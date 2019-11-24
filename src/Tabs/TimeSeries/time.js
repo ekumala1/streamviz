@@ -1,5 +1,5 @@
-import * as d3 from 'd3';
-import graph from '../graph';
+import * as d3 from "d3";
+import graph from "../graph";
 
 // smh js doesn't have average built in
 var average = arr => arr.reduce((a, b) => a + b) / arr.length;
@@ -8,7 +8,7 @@ from the model*/
 class timePlot extends graph {
   constructor() {
     super();
-    this.WSIDs = [];
+    this.WSs = [];
     this.isLog = false;
     this.yearRange = [];
   }
@@ -22,51 +22,51 @@ class timePlot extends graph {
       .domain(d3.extent(this.data, d => d.date))
       .range([50, this.width - 100]);
     this.xAxis.call(d3.axisBottom().scale(this.xScale));
-    this.xLabel.text('Time');
+    this.xLabel.text("Time");
 
     this.path = this.svg
-      .append('path')
-      .style('stroke-opacity', 0)
-      .attr('class', 'line');
+      .append("path")
+      .style("stroke-opacity", 0)
+      .attr("class", "line");
 
     this.pointer = this.svg
-      .append('circle')
-      .attr('class', 'focus')
-      .attr('r', 3)
-      .attr('opacity', 0);
+      .append("circle")
+      .attr("class", "focus")
+      .attr("r", 3)
+      .attr("opacity", 0);
     this.focusXLine = this.svg
-      .append('line')
-      .attr('class', 'focus')
-      .attr('y1', this.yScale(this.yScale.domain()[0]))
-      .attr('y2', this.yScale(this.yScale.domain()[1]))
-      .attr('stroke-dasharray', '5')
-      .style('opacity', 0);
+      .append("line")
+      .attr("class", "focus")
+      .attr("y1", this.yScale(this.yScale.domain()[0]))
+      .attr("y2", this.yScale(this.yScale.domain()[1]))
+      .attr("stroke-dasharray", "5")
+      .style("opacity", 0);
     this.focusYLine = this.svg
-      .append('line')
-      .attr('class', 'focus')
-      .attr('x1', this.xScale(this.xScale.domain()[0]))
-      .attr('x2', this.xScale(this.xScale.domain()[1]))
-      .attr('stroke-dasharray', '5')
-      .style('opacity', 0);
+      .append("line")
+      .attr("class", "focus")
+      .attr("x1", this.xScale(this.xScale.domain()[0]))
+      .attr("x2", this.xScale(this.xScale.domain()[1]))
+      .attr("stroke-dasharray", "5")
+      .style("opacity", 0);
 
     this.focusXText = this.svg
-      .append('text')
-      .attr('class', 'focus')
-      .attr('y', this.height - 25);
+      .append("text")
+      .attr("class", "focus")
+      .attr("y", this.height - 25);
     this.focusYText = this.svg
-      .append('text')
-      .attr('class', 'focus')
-      .attr('x', 12);
+      .append("text")
+      .attr("class", "focus")
+      .attr("x", 12);
   }
 
   filterData(param) {
-    var no_wsids = this.WSIDs.length === 0;
+    var no_wss = this.WSs.length === 0;
 
     this.fData = this.data.filter(
       d =>
         d[param] != null &&
         d.date != null &&
-        (no_wsids || this.WSIDs.includes(d.WSID)) &&
+        (no_wss || this.WSs.includes(d.WS)) &&
         (!this.yearRange[0] || d.date.getFullYear() > this.yearRange[0]) &&
         (!this.yearRange[1] || d.date.getFullYear() < this.yearRange[1])
     );
@@ -89,7 +89,7 @@ class timePlot extends graph {
 
     // sort data to put dates in order
     this.fData = this.fData.sort((a, b) => b.key - a.key);
-    this.xVar = 'Date';
+    this.xVar = "Date";
     this.yVar = param;
   }
 
@@ -121,29 +121,30 @@ class timePlot extends graph {
   }
 
   buildScatter() {
-    var selection = this.svg.selectAll('.bubble').data(this.fData);
+    var selection = this.svg.selectAll(".bubble").data(this.fData);
 
     selection
       .enter()
-      .append('circle')
-      .attr('class', 'bubble')
-      .attr('r', 0)
-      .style('opacity', 1)
+      .append("circle")
+      .attr("class", "bubble")
+      .attr("r", 0)
+      .style("opacity", 1)
 
       // update
       .merge(selection)
       .transition()
       .duration(this.duration)
-      .attr('r', 3)
-      .attr('cx', d => this.xScale(d.key))
-      .attr('cy', d => this.yScale(d.value));
+      .attr("r", 3)
+      .attr("cx", d => this.xScale(d.key))
+      .attr("cy", d => this.yScale(d.value))
+      .style("opacity", 1);
 
     // exit
     selection
       .exit()
       .transition()
       .duration(this.duration)
-      .style('opacity', 0)
+      .style("opacity", 0)
       .remove();
   }
 
@@ -157,14 +158,14 @@ class timePlot extends graph {
     this.path
       .transition()
       .duration(this.duration)
-      .style('stroke-opacity', 0.5)
-      .attr('d', line(this.fData));
+      .style("stroke-opacity", 0.5)
+      .attr("d", line(this.fData));
 
     this.path
       .exit()
       .transition()
       .duration(this.duration)
-      .style('stroke-opacity', 0)
+      .style("stroke-opacity", 0)
       .remove();
   }
 
@@ -175,32 +176,32 @@ class timePlot extends graph {
 
     var pthis = this;
     this.svg
-      .on('mousemove', function() {
+      .on("mousemove", function() {
         var mouse = d3.mouse(this);
         var xValue = pthis.xScale.invert(mouse[0]);
         var yValue = pthis.yScale.invert(mouse[1]);
 
         pthis.pointer
-          .attr('opacity', 1)
-          .attr('cx', mouse[0])
-          .attr('cy', mouse[1]);
+          .attr("opacity", 1)
+          .attr("cx", mouse[0])
+          .attr("cy", mouse[1]);
         pthis.focusXLine
-          .style('opacity', 0.5)
-          .attr('x1', mouse[0])
-          .attr('x2', mouse[0]);
+          .style("opacity", 0.5)
+          .attr("x1", mouse[0])
+          .attr("x2", mouse[0]);
         pthis.focusYLine
-          .style('opacity', 0.5)
-          .attr('y1', mouse[1])
-          .attr('y2', mouse[1]);
+          .style("opacity", 0.5)
+          .attr("y1", mouse[1])
+          .attr("y2", mouse[1]);
         pthis.focusXText
-          .attr('x', mouse[0])
-          .text(xValue.toLocaleDateString('en-US'));
-        pthis.focusYText.attr('y', mouse[1]).text(yValue.toFixed(2));
+          .attr("x", mouse[0])
+          .text(xValue.toLocaleDateString("en-US"));
+        pthis.focusYText.attr("y", mouse[1]).text(yValue.toFixed(2));
       })
-      .on('mouseout', () => {
-        this.pointer.attr('opacity', 0);
-        this.focusXLine.style('opacity', 0);
-        this.focusYLine.style('opacity', 0);
+      .on("mouseout", () => {
+        this.pointer.attr("opacity", 0);
+        this.focusXLine.style("opacity", 0);
+        this.focusYLine.style("opacity", 0);
       });
   }
 }
