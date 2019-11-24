@@ -29,3 +29,7 @@
   stroke: orange;
   stroke-width: 2px;
 }
+
+.fas {
+  font-family: FontAwesome !important;
+}

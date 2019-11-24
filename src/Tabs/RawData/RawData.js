@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import { Button, Dropdown } from "semantic-ui-react";
+import React, { Component } from 'react';
+import { Button, Dropdown } from 'semantic-ui-react';
+import MultiFilter from '../../components/MultiFilter/MultiFilter';
 
-import "./RawData.css";
+import './RawData.css';
 
 class RawData extends Component {
   PAGE_SIZE = 16;
@@ -15,7 +16,7 @@ class RawData extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:5000/streams")
+    fetch('http://localhost:5000/streams')
       .then(response => response.json())
       .then(result => {
         result = result.map(d => {
@@ -50,16 +51,16 @@ class RawData extends Component {
   }
 
   getFile() {
-    console.log("hi");
+    console.log('hi');
 
-    fetch("http://localhost:5000/streams/download")
+    fetch('http://localhost:5000/streams/download')
       .then(response => response.blob())
       .then(result => {
         // 2. Create blob link to download
         const url = window.URL.createObjectURL(new Blob([result]));
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         link.href = url;
-        link.setAttribute("download", "data.csv");
+        link.setAttribute('download', 'data.csv');
         // 3. Append to html page
         document.body.appendChild(link);
         // 4. Force download
@@ -103,15 +104,15 @@ class RawData extends Component {
   render() {
     var getClass = column => {
       if (column === this.state.column)
-        return this.state.ascending ? "ascending" : "descending";
+        return this.state.ascending ? 'ascending' : 'descending';
       else return null;
     };
     return (
-      <div style={{ overflow: "auto", height: "100%" }} className="wholeTable">
+      <div style={{ overflow: 'auto', height: '100%' }} className="wholeTable">
         <div className="tableContent">
           <div className="hangRight">
             <div className="topTableOpts">
-              <span style={{ marginRight: "10px" }} id="showLabel">
+              <span style={{ marginRight: '10px' }} id="showLabel">
                 Show:
               </span>
               <Dropdown
@@ -122,6 +123,7 @@ class RawData extends Component {
                 options={this.state.WSIDs}
                 onChange={this.handleSearch.bind(this)}
               />
+              <MultiFilter></MultiFilter>
             </div>
             <Button onClick={this.getFile} id="downloadBtn">
               Download

@@ -1,20 +1,21 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
-import TopBar from "./TopBar/TopBar";
+import TopBar from './TopBar/TopBar';
 // import BottomBar from "./BottomBar/BottomBar";
-import BoxPlot from "./Tabs/BoxPlot/BoxPlot";
-import ScatterPlot from "./Tabs/ScatterPlot/ScatterPlot";
-import TimeSeries from "./Tabs/TimeSeries/TimeSeries";
-import RawData from "./Tabs/RawData/RawData";
-import Login from "./Tabs/Login/Login";
+import BoxPlot from './Tabs/BoxPlot/BoxPlot';
+import ScatterPlot from './Tabs/ScatterPlot/ScatterPlot';
+import TimeSeries from './Tabs/TimeSeries/TimeSeries';
+import RawData from './Tabs/RawData/RawData';
+import Login from './Tabs/Login/Login';
+import 'font-awesome/css/font-awesome.min.css';
 
-import "./App.css";
+import './App.css';
 
-import "semantic-ui-css/semantic.min.css";
+import 'semantic-ui-css/semantic.min.css';
 // import "bootstrap/dist/css/bootstrap.min.css";
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
 class App extends Component {
   render() {
