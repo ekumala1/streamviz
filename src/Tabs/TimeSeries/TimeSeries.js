@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import "./TimeSeries.css";
+import React, { Component } from 'react';
+import './TimeSeries.css';
 
-import timePlot from "./time";
-import { Dropdown } from "semantic-ui-react";
-import { DateRangePicker } from "react-dates";
+import timePlot from './time';
+import { Dropdown, Checkbox } from 'semantic-ui-react';
+import { DateRangePicker } from 'react-dates';
 /* The class to draw the timeseries plot using the methods from
 time.js */
 class TimeSeries extends Component {
@@ -14,6 +14,7 @@ class TimeSeries extends Component {
     this.state = { keys: [], data: [] };
 
     this.setParam = this.setParam.bind(this);
+    this.toggleScale = this.toggleScale.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
   }
 
@@ -21,7 +22,7 @@ class TimeSeries extends Component {
     this.time = new timePlot();
     this.time.clear();
 
-    fetch("http://localhost:5000/streams")
+    fetch('http://localhost:5000/streams')
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);
@@ -29,9 +30,9 @@ class TimeSeries extends Component {
         //WSID is just an ID so the graph is not very useful
         //ecoli method is the method which which ecoli info was collected
         //a timeseries plot of date is not important
-        variables.splice(variables.indexOf("WSID"), 1);
-        variables.splice(variables.indexOf("ecoli_method"), 1);
-        variables.splice(variables.indexOf("date"), 1);
+        variables.splice(variables.indexOf('WSID'), 1);
+        variables.splice(variables.indexOf('ecoli_method'), 1);
+        variables.splice(variables.indexOf('date'), 1);
 
         var WSIDs = result.map(row => row.WSID);
         WSIDs = [...new Set(WSIDs)];
@@ -51,6 +52,11 @@ class TimeSeries extends Component {
     this.param = data.value;
     console.log(this.param);
 
+    this.time.draw(this.param);
+  }
+
+  toggleScale() {
+    this.time.isLog = !this.time.isLog;
     this.time.draw(this.param);
   }
 
@@ -106,6 +112,12 @@ class TimeSeries extends Component {
         </div>
         <div className="content">
           <svg id="svg" width="1195.5px" height="100%" />
+          <br />
+          <Checkbox
+            toggle
+            label="Logarithmic scale"
+            onChange={this.toggleScale}
+          />
         </div>
       </div>
     );

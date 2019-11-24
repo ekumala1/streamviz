@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import "./BoxPlot.css";
+import React, { Component } from 'react';
+import './BoxPlot.css';
 
-import boxPlot from "./box";
-import { Dropdown, Checkbox } from "semantic-ui-react";
+import boxPlot from './box';
+import { Dropdown, Checkbox } from 'semantic-ui-react';
 /* The class to draw the Box Plot using the methods from box.js*/
 class RawData extends Component {
   constructor() {
@@ -11,6 +11,7 @@ class RawData extends Component {
 
     this.setParam = this.setParam.bind(this);
     this.setOutliers = this.setOutliers.bind(this);
+    this.toggleScale = this.toggleScale.bind(this);
   }
 
   componentDidMount() {
@@ -18,7 +19,7 @@ class RawData extends Component {
     this.box.clear();
     this.box.buildAxes();
 
-    fetch("http://localhost:5000/streams")
+    fetch('http://localhost:5000/streams')
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);
@@ -26,9 +27,9 @@ class RawData extends Component {
         //WSID is just an ID so the graph is not very useful
         //ecoli method is the method which which ecoli info was collected
         //a box plot of date is not important
-        variables.splice(variables.indexOf("WSID"), 1);
-        variables.splice(variables.indexOf("ecoli_method"), 1);
-        variables.splice(variables.indexOf("date"), 1);
+        variables.splice(variables.indexOf('WSID'), 1);
+        variables.splice(variables.indexOf('ecoli_method'), 1);
+        variables.splice(variables.indexOf('date'), 1);
 
         this.setState({ keys: variables, data: result });
         this.state.data.forEach(d => (d.date = new Date(d.date)));
@@ -47,6 +48,13 @@ class RawData extends Component {
       this.box.draw(this.param, this.state.outliers);
     });
   }
+
+  toggleScale() {
+    console.log(this.box);
+    this.box.isLog = !this.box.isLog;
+    this.box.draw(this.param);
+  }
+
   //render contains the layout of elements in the window of this plot
   //includes dropdowns, buttons, and other user interface
   render() {
@@ -74,6 +82,11 @@ class RawData extends Component {
             toggle
             label="Display Outliers"
             onChange={this.setOutliers}
+          />
+          <Checkbox
+            toggle
+            label="Logarithmic scale"
+            onChange={this.toggleScale}
           />
         </div>
       </div>
