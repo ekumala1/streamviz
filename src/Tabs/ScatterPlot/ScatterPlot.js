@@ -35,10 +35,6 @@ class RawData extends Component {
 
         this.setState({ keys: variables });
 
-        var WSIDs = result.map(row => row.WSID);
-        WSIDs = [...new Set(WSIDs)];
-        WSIDs = WSIDs.map(id => ({ key: id, text: id, value: id }));
-
         result.forEach(
           d => (d.date = d.date == null ? null : new Date(d.date))
         );

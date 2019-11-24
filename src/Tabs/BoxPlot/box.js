@@ -23,7 +23,8 @@ class boxPlot extends graph {
       .nest()
       .key(d => d.date.getFullYear())
       .rollup(d => d.map(e => e[param]).sort((a, b) => a - b))
-      .entries(this.fData);
+      .entries(this.fData)
+      .sort((a, b) => +a.key - +b.key);
 
     this.xVar = 'date';
     this.yVar = param;

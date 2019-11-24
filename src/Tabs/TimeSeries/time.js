@@ -10,6 +10,7 @@ class timePlot extends graph {
     super();
     this.WSIDs = [];
     this.isLog = false;
+    this.yearRange = [];
   }
 
   buildAxes() {
@@ -60,12 +61,17 @@ class timePlot extends graph {
 
   filterData(param) {
     var no_wsids = this.WSIDs.length === 0;
+
     this.fData = this.data.filter(
       d =>
         d[param] != null &&
         d.date != null &&
-        (no_wsids || this.WSIDs.includes(d.WSID))
+        (no_wsids || this.WSIDs.includes(d.WSID)) &&
+        (!this.yearRange[0] || d.date.getFullYear() > this.yearRange[0]) &&
+        (!this.yearRange[1] || d.date.getFullYear() < this.yearRange[1])
     );
+
+    console.log(this.fData);
 
     // get average entry by date
     this.fData = d3
