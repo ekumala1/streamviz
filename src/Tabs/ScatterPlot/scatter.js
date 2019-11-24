@@ -18,6 +18,11 @@ class scatterPlot extends graph {
       .append('path')
       .attr('class', 'line')
       .style('stroke-opacity', 0);
+    this.correlation = this.svg
+      .append('text')
+      .attr('class', 'focus')
+      .attr('x', this.width - 50)
+      .attr('y', 20);
     this.pointer = this.svg
       .append('circle')
       .attr('class', 'focus')
@@ -75,12 +80,17 @@ class scatterPlot extends graph {
         .line()
         .x(d => this.xScale(d.x))
         .y(d => this.yScale(d.y));
+      var correlation = ss.rSquared(
+        this.fData.map(d => [+d[this.xVar], +d[this.yVar]]),
+        this.bestFitFunc
+      );
 
       this.line
         .transition()
         .duration(this.duration)
         .attr('d', line(points))
         .style('stroke-opacity', 1);
+      this.correlation.text(correlation);
     } else {
       this.line
         .transition()
