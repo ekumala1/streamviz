@@ -108,7 +108,7 @@ class TimeSeries extends Component {
           <YearSlider onChange={this.handleDateFilter}></YearSlider>
         </div>
         <div className="content">
-          <svg id="svg" width="1195.5px" height="100%" />
+          <svg id="svg" width="1195.5px" height="95%" />
           <br />
           <Checkbox
             toggle

@@ -7,8 +7,8 @@ to pull data from the model and draw the box plot */
 class boxPlot extends graph {
   constructor() {
     super();
-    this.WSs = [];
     this.isLog = false;
+    this.WSs = [];
     this.yearRange = [];
   }
   // creates the axes for a plot based on the scale of the screen

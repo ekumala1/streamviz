@@ -8,8 +8,8 @@ from the model*/
 class timePlot extends graph {
   constructor() {
     super();
-    this.WSs = [];
     this.isLog = false;
+    this.WSs = [];
     this.yearRange = [];
   }
 

@@ -30,7 +30,8 @@ class RawData extends Component {
         //WSID is just an ID so the graph is not very useful
         //ecoli method is the method which which ecoli info was collected
         //a box plot of date is not important
-        variables.splice(variables.indexOf("WSID"), 1);
+        variables.splice(variables.indexOf("WS"), 1);
+        variables.splice(variables.indexOf("ID"), 1);
         variables.splice(variables.indexOf("ecoli_method"), 1);
         variables.splice(variables.indexOf("date"), 1);
 

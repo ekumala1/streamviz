@@ -7,6 +7,8 @@ class scatterPlot extends graph {
     super();
     this.isLog = false;
     this.drawLine = false;
+    this.WSs = [];
+    this.yearRange = [];
   }
 
   buildAxes() {
@@ -52,6 +54,18 @@ class scatterPlot extends graph {
       .append("text")
       .attr("class", "focus")
       .attr("x", 12);
+  }
+
+  filterData(params) {
+    super.filterData(params);
+
+    var no_wss = this.WSs.length === 0;
+    this.fData = this.fData.filter(
+      d =>
+        (no_wss || this.WSs.includes(d.WS)) &&
+        (!this.yearRange[0] || d.date.getFullYear() >= this.yearRange[0]) &&
+        (!this.yearRange[1] || d.date.getFullYear() <= this.yearRange[1])
+    );
   }
 
   updateAxes(params) {
