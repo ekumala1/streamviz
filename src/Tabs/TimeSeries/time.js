@@ -168,9 +168,13 @@ class timePlot extends graph {
           .attr("y1", mouse[1])
           .attr("y2", mouse[1]);
         pthis.focusXText
+          .style("opacity", 1)
           .attr("x", mouse[0])
           .text(xValue.toLocaleDateString("en-US"));
-        pthis.focusYText.attr("y", mouse[1]).text(yValue.toFixed(2));
+        pthis.focusYText
+          .style("opacity", 1)
+          .attr("y", mouse[1])
+          .text(yValue.toFixed(2));
       } else {
         pthis.pointer.attr("opacity", 0);
         pthis.focusXLine.style("opacity", 0);
