@@ -28,35 +28,6 @@ class timePlot extends graph {
       .append("path")
       .style("stroke-opacity", 0)
       .attr("class", "line");
-
-    this.pointer = this.svg
-      .append("circle")
-      .attr("class", "focus")
-      .attr("r", 3)
-      .attr("opacity", 0);
-    this.focusXLine = this.svg
-      .append("line")
-      .attr("class", "focus")
-      .attr("y1", this.yScale(this.yScale.domain()[0]))
-      .attr("y2", this.yScale(this.yScale.domain()[1]))
-      .attr("stroke-dasharray", "5")
-      .style("opacity", 0);
-    this.focusYLine = this.svg
-      .append("line")
-      .attr("class", "focus")
-      .attr("x1", this.xScale(this.xScale.domain()[0]))
-      .attr("x2", this.xScale(this.xScale.domain()[1]))
-      .attr("stroke-dasharray", "5")
-      .style("opacity", 0);
-
-    this.focusXText = this.svg
-      .append("text")
-      .attr("class", "focus")
-      .attr("y", this.height - 25);
-    this.focusYText = this.svg
-      .append("text")
-      .attr("class", "focus")
-      .attr("x", 12);
   }
 
   filterData(param) {
@@ -70,8 +41,6 @@ class timePlot extends graph {
         (!this.yearRange[0] || d.date.getFullYear() >= this.yearRange[0]) &&
         (!this.yearRange[1] || d.date.getFullYear() <= this.yearRange[1])
     );
-
-    console.log(this.fData);
 
     // get average entry by date
     this.fData = d3
@@ -175,9 +144,14 @@ class timePlot extends graph {
     this.buildLine();
 
     var pthis = this;
-    this.svg
-      .on("mousemove", function() {
-        var mouse = d3.mouse(this);
+    this.svg.on("mousemove", function() {
+      var mouse = d3.mouse(this);
+      if (
+        mouse[0] > pthis.xScale.range()[0] &&
+        mouse[0] < pthis.xScale.range()[1] &&
+        mouse[1] > pthis.yScale.range()[1] &&
+        mouse[1] < pthis.yScale.range()[0]
+      ) {
         var xValue = pthis.xScale.invert(mouse[0]);
         var yValue = pthis.yScale.invert(mouse[1]);
 
@@ -197,12 +171,14 @@ class timePlot extends graph {
           .attr("x", mouse[0])
           .text(xValue.toLocaleDateString("en-US"));
         pthis.focusYText.attr("y", mouse[1]).text(yValue.toFixed(2));
-      })
-      .on("mouseout", () => {
-        this.pointer.attr("opacity", 0);
-        this.focusXLine.style("opacity", 0);
-        this.focusYLine.style("opacity", 0);
-      });
+      } else {
+        pthis.pointer.attr("opacity", 0);
+        pthis.focusXLine.style("opacity", 0);
+        pthis.focusYLine.style("opacity", 0);
+        pthis.focusXText.style("opacity", 0);
+        pthis.focusYText.style("opacity", 0);
+      }
+    });
   }
 }
 

@@ -37,6 +37,38 @@ class graph {
       .attr("transform", `rotate(-90) translate(-${this.height / 2}, 0)`)
       .attr("dy", "1em")
       .style("text-anchor", "middle");
+
+    this.pointer = this.svg
+      .append("circle")
+      .attr("class", "focus")
+      .attr("r", 3)
+      .attr("opacity", 0);
+
+    this.focusXLine = this.svg
+      .append("line")
+      .attr("class", "focus")
+      .attr("y1", this.yScale(this.yScale.domain()[0]))
+      .attr("y2", this.yScale(this.yScale.domain()[1]))
+      .attr("stroke-dasharray", "5")
+      .style("opacity", 0);
+    this.focusYLine = this.svg
+      .append("line")
+      .attr("class", "focus")
+      .attr("x1", this.xScale(this.xScale.domain()[0]))
+      .attr("x2", this.xScale(this.xScale.domain()[1]))
+      .attr("stroke-dasharray", "5")
+      .style("opacity", 0);
+
+    this.focusXText = this.svg
+      .append("text")
+      .attr("class", "focus")
+      .attr("text-anchor", "middle")
+      .attr("y", this.height - 30);
+    this.focusYText = this.svg
+      .append("text")
+      .attr("class", "focus")
+      .attr("text-anchor", "end")
+      .attr("x", 45);
   }
 
   filterData(params) {
@@ -95,6 +127,14 @@ class graph {
 
   draw(params) {
     this.updateAxes(params);
+
+    this.svg.on("mouseout", () => {
+      this.pointer.attr("opacity", 0);
+      this.focusXLine.style("opacity", 0);
+      this.focusYLine.style("opacity", 0);
+      this.focusXText.style("opacity", 0);
+      this.focusYText.style("opacity", 0);
+    });
   }
 }
 

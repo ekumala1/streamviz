@@ -25,35 +25,6 @@ class scatterPlot extends graph {
       .attr("class", "focus")
       .attr("x", this.width - 150)
       .attr("y", 70);
-    this.pointer = this.svg
-      .append("circle")
-      .attr("class", "focus")
-      .attr("r", 3)
-      .attr("opacity", 0);
-
-    this.focusXLine = this.svg
-      .append("line")
-      .attr("class", "focus")
-      .attr("y1", this.yScale(this.yScale.domain()[0]))
-      .attr("y2", this.yScale(this.yScale.domain()[1]))
-      .attr("stroke-dasharray", "5")
-      .style("opacity", 0);
-    this.focusYLine = this.svg
-      .append("line")
-      .attr("class", "focus")
-      .attr("x1", this.xScale(this.xScale.domain()[0]))
-      .attr("x2", this.xScale(this.xScale.domain()[1]))
-      .attr("stroke-dasharray", "5")
-      .style("opacity", 0);
-
-    this.focusXText = this.svg
-      .append("text")
-      .attr("class", "focus")
-      .attr("y", this.height - 25);
-    this.focusYText = this.svg
-      .append("text")
-      .attr("class", "focus")
-      .attr("x", 12);
   }
 
   filterData(params) {
@@ -119,10 +90,15 @@ class scatterPlot extends graph {
     this.toggleLine();
 
     var pthis = this;
-    this.svg
-      .on("mousemove", function() {
-        var mouse = d3.mouse(this);
+    this.svg.on("mousemove", function() {
+      var mouse = d3.mouse(this);
 
+      if (
+        mouse[0] > pthis.xScale.range()[0] &&
+        mouse[0] < pthis.xScale.range()[1] &&
+        mouse[1] > pthis.yScale.range()[1] &&
+        mouse[1] < pthis.yScale.range()[0]
+      ) {
         // get coordinates of crosshair
         var xValue = pthis.xScale.invert(mouse[0]); // always at mouse's X value
         var yValue = pthis.drawLine
@@ -150,14 +126,14 @@ class scatterPlot extends graph {
           .style("opacity", 1)
           .attr("y", yPixel)
           .text(yValue.toFixed(2));
-      })
-      .on("mouseout", () => {
-        this.pointer.attr("opacity", 0);
-        this.focusXLine.style("opacity", 0);
-        this.focusYLine.style("opacity", 0);
-        this.focusXText.style("opacity", 0);
-        this.focusYText.style("opacity", 0);
-      });
+      } else {
+        pthis.pointer.attr("opacity", 0);
+        pthis.focusXLine.style("opacity", 0);
+        pthis.focusYLine.style("opacity", 0);
+        pthis.focusXText.style("opacity", 0);
+        pthis.focusYText.style("opacity", 0);
+      }
+    });
 
     var selection = this.bubbles.selectAll(".bubble").data(this.fData);
     var group = this.svg.append("g").attr("class", "tooltips");

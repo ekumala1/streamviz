@@ -69,12 +69,12 @@ class RawData extends Component {
 
   handleSearch(_, data) {
     this.scatter.WSs = data.value;
-    this.scatter.draw(this.param);
+    this.scatter.draw(this.params);
   }
 
   handleDateFilter(data) {
     this.scatter.yearRange = data;
-    this.scatter.draw(this.param);
+    this.scatter.draw(this.params);
   }
 
   //render contains the layout of elements in the window of this plot
