@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Menu } from 'semantic-ui-react';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from "react";
+import { Menu } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 
 class TopBar extends Component {
   render() {
@@ -18,8 +18,8 @@ class TopBar extends Component {
         <Menu.Item as={NavLink} to="/raw" activeClassName="active">
           View Raw Data
         </Menu.Item>
-        <Menu.Item as={NavLink} to="/login" activeClassName="active">
-          Login
+        <Menu.Item as={NavLink} to="/upload" activeClassName="active">
+          Upload
         </Menu.Item>
       </Menu>
     );
