@@ -9,10 +9,10 @@ class MultiFilter extends Component {
     super(props);
     this.values = [];
     this.handleChange = this.handleChange.bind(this);
-    this.createFilter = this.createFilter.bind(this);
+    this.addFilter = this.addFilter.bind(this);
     this.resetFilter = this.resetFilter.bind(this);
 
-    this.state = { numFilters: 1 };
+    this.state = { filters: [] };
     // this.setState({ numFilters: 1 });
 
     this.width = "150px";
@@ -23,8 +23,10 @@ class MultiFilter extends Component {
     this.props.onChange(this.values);
   }
 
-  createFilter() {
-    this.setState({ numFilters: this.state.numFilters + 1 });
+  addFilter() {
+    var filters = this.state.filters;
+    filters.push({ column: "", values: [] });
+    this.setState({ filters: filters });
   }
 
   resetFilter() {
@@ -36,15 +38,15 @@ class MultiFilter extends Component {
   render() {
     return (
       <div>
-        <Button onClick={this.createFilter}>
+        <Button onClick={this.addFilter}>
           <span className="fas fa-plus"></span>
         </Button>
         <Button onClick={this.resetFilter}>
           <span className="fas fa-minus"></span>
         </Button>
-        {Array(this.state.numFilters).fill(
-          <Filter onChange={this.handleChange} />
-        )}
+        {this.state.filters.map(filter => (
+          <Filter variable={filter.column} values={filter.values} />
+        ))}
       </div>
     );
   }
