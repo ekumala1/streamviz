@@ -24,7 +24,7 @@ class TimeSeries extends Component {
     this.time = new timePlot();
     this.time.clear();
 
-    fetch("streams")
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);

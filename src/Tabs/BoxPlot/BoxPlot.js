@@ -22,7 +22,7 @@ class RawData extends Component {
     this.box.clear();
     this.box.buildAxes();
 
-    fetch("/streams")
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);

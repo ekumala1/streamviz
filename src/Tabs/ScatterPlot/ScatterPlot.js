@@ -25,7 +25,7 @@ class RawData extends Component {
     this.scatter.clear();
     this.scatter.buildAxes();
 
-    fetch("streams")
+    fetch("http://localhost:5000/streams")
       .then(response => response.json())
       .then(result => {
         var variables = Object.keys(result[0]);
