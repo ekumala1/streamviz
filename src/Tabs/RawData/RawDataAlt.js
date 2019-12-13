@@ -15,7 +15,7 @@ class RawData extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:5000/streams")
+    fetch(`http://${process.env.REACT_APP_API_URL}/streams`)
       .then(response => response.json())
       .then(result => {
         var WSIDs = result.map(row => row.WSID);

@@ -23,7 +23,7 @@ class Upload extends Component {
     const data = new FormData();
     data.append("file", file);
 
-    fetch("http://localhost:5000/streams/upload", {
+    fetch(`http://${process.env.REACT_APP_API_URL}/streams/upload`, {
       method: "POST",
       body: data
     })
