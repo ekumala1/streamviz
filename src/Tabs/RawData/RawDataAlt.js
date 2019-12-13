@@ -15,7 +15,7 @@ class RawData extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:5000/streams")
+    fetch("streams")
       .then(response => response.json())
       .then(result => {
         var WSIDs = result.map(row => row.WSID);
@@ -49,7 +49,7 @@ class RawData extends Component {
   getFile() {
     console.log("hi");
 
-    fetch("http://localhost:5000/streams/download")
+    fetch("streams/download")
       .then(response => response.blob())
       .then(result => {
         // 2. Create blob link to download

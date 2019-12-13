@@ -23,7 +23,7 @@ class Upload extends Component {
     const data = new FormData();
     data.append("file", file);
 
-    fetch("http://localhost:5000/streams/upload", {
+    fetch("streams/upload", {
       method: "POST",
       body: data
     })
