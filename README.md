@@ -13,3 +13,5 @@ If yarn is not installed locally, install it from [the website](https://yarnpkg.
 `yarn start`
 
 The server will run on `localhost:3000`
+
+<a href=https://github.com/Daneolog/streamviz_backend>StreamViz Backend</a>
